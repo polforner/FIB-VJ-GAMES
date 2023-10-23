@@ -39,7 +39,7 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH - 1), float(SCREEN_HEIGHT - 1), 0.f);
+	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	modelview = glm::mat4(1.0f);
 	currentTime = 0.0f;
 }
@@ -48,11 +48,11 @@ void Scene::updateCamera() {
     // Obtenemos la posición actual del jugador.
     glm::ivec2 playerPosition = player->getPosition();
 	int mapWidth = map->getMapSize().x * map->getTileSize();
-    int mapHeight = map->getMapSize().y * map->getTileSize()	;
+    int mapHeight = map->getMapSize().y * map->getTileSize();
 
     // Calcula el centro de la ventana visible.
-    int cameraX = playerPosition.x - (SCREEN_WIDTH / 2);
-    int cameraY = playerPosition.y - (SCREEN_HEIGHT / 2);
+   int cameraX = playerPosition.x - (SCREEN_WIDTH / 2);
+   int cameraY = playerPosition.y - (SCREEN_HEIGHT / 2);
 
     // Asegúrate de que la cámara no se salga de los límites del mapa.
 
@@ -60,14 +60,14 @@ void Scene::updateCamera() {
     cameraY = glm::clamp(cameraY, 0, mapHeight - SCREEN_HEIGHT);
 
     // Actualiza la matriz de vista para reflejar la posición de la cámara.
-    modelview = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, 0.0f));
+    projection = glm::ortho(0.f + cameraX, float(SCREEN_WIDTH) + cameraX, float(SCREEN_HEIGHT) + cameraY, 0.f + cameraY);
 }
 
 void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	//updateCamera();
+	updateCamera();
 }
 
 void Scene::render()

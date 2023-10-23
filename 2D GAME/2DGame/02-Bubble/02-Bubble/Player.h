@@ -29,13 +29,12 @@ private:
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
-	TileMap *background;
 	TileMap *map;
-	TileMap *entities;
 	bool isSmall; 
 	bool inControl;
 	bool isStar;
-	bool isEliminated; 
+	bool isEliminated;
+	int velocity;
 };
 
 

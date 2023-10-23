@@ -9,6 +9,9 @@
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT 192
 #define FALL_STEP 8
+#define ACCELERATION 1
+#define INI_VELOCITY 2
+#define MAX_VELOCITY 5
 
 
 
@@ -49,6 +52,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	isSmall = true;
 	isStar = false;
 	bJumping = false;
+	velocity = INI_VELOCITY;
 	spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.125, 0.125), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(8);
@@ -63,6 +67,7 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.125f));
 		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.25f));
+		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.375f));
 		
 		sprite->setAnimationSpeed(MOVE_RIGHT, 8);
 		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.f));
@@ -91,20 +96,33 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 
 void Player::update(int deltaTime)
 {
-
-
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)/* and (inControl)*/)
 	{
 		if(sprite->animation() != MOVE_LEFT)
 			sprite->changeAnimation(MOVE_LEFT);
-		posPlayer.x -= 2;
+		velocity = glm::min(INI_VELOCITY + ACCELERATION * deltaTime, MAX_VELOCITY);
+		posPlayer.x -= velocity;
 		if(map->collisionMoveLeft(posPlayer, glm::ivec2(64, 64)))
 		{
-			posPlayer.x += 2;
+			posPlayer.x += velocity;
+			velocity = INI_VELOCITY;
 			sprite->changeAnimation(STAND_LEFT);
 		}
 
+	}
+	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT) /* and inControl */)
+	{
+		if(sprite->animation() != MOVE_RIGHT)
+			sprite->changeAnimation(MOVE_RIGHT);
+		velocity = glm::min(INI_VELOCITY + ACCELERATION * deltaTime, MAX_VELOCITY);
+		posPlayer.x += velocity;
+		if(map->collisionMoveRight(posPlayer, glm::ivec2(64, 64), &posPlayer.x))
+		{
+			//posPlayer.x -= velocity;
+			velocity = INI_VELOCITY;
+			sprite->changeAnimation(STAND_RIGHT);
+		}
 	}
 	else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)/* and (inControl)*/)
 	{
@@ -112,17 +130,6 @@ void Player::update(int deltaTime)
 			sprite->changeAnimation(JUMP_RIGHT);
 		
 
-	}
-	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT) /* and inControl */)
-	{
-		if(sprite->animation() != MOVE_RIGHT)
-			sprite->changeAnimation(MOVE_RIGHT);
-		posPlayer.x += 2;
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(64, 64)))
-		{
-			posPlayer.x -= 2;
-			sprite->changeAnimation(STAND_RIGHT);
-		}
 	}
 	else
 	{
@@ -173,9 +180,11 @@ void Player::update(int deltaTime)
 		//codigo para que baje hasta abajo de la pantalla
 
 	}
-
 	
-	
+	//int mapWidth = map->getMapSize().x * map->getTileSize();
+    //int mapHeight = map->getMapSize().y * map->getTileSize();
+	//posPlayer.x = glm::clamp(posPlayer.x, 0, mapWidth - SCREEN_WIDTH);
+    //posPlayer.y = glm::clamp(posPlayer.y, 0, mapHeight - SCREEN_HEIGHT);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 

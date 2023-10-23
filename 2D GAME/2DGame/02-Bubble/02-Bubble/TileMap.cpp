@@ -172,7 +172,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	return false;
 }
 
-bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) const
 {
 	if (NOCOLISION) return false;
 	int x, y0, y1;
@@ -182,8 +182,14 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size) 
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		if(map[y*mapSize.x+x] != COLISIONINDEX)
-			return true;
+		if(map[y*mapSize.x+x] != COLISIONINDEX)			
+		{
+			if(*posX - tileSize * x + size.x <= 16) // preguntar porque con 8 falla pero asi va ???
+			{
+				*posX = tileSize * x - size.x;
+				return true;
+			}
+		}
 	}
 	
 	return false;
