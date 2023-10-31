@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include "TileMap.h"
+#include <windows.h>
 
 using namespace std;
 
@@ -84,6 +85,7 @@ bool TileMap::loadLevel(const string &levelFile)
 	{
 		for (int i = 0; i<mapSize.x; i++)
 		{
+			
 			int num = 0;
 			fin.get(tile);
 			while ('0' <= tile && tile <= '9') {
@@ -92,6 +94,7 @@ bool TileMap::loadLevel(const string &levelFile)
 			}
 			map[j*mapSize.x + i] = num;
 		}
+		
 		fin.get(tile);
 #ifndef _WIN32
 		fin.get(tile);
@@ -166,7 +169,7 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	for(int y=y0; y<=y1; y++)
 	{
 		if(map[y*mapSize.x+x] != COLISIONINDEX)
-			return true;
+				return true;
 	}
 	
 	return false;
@@ -184,7 +187,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, 
 	{
 		if(map[y*mapSize.x+x] != COLISIONINDEX)			
 		{
-			if(*posX - tileSize * x + size.x <= 16) // preguntar porque con 8 falla pero asi va ???
+			if(*posX - tileSize * x + size.x <= 8) // preguntar porque con 8 falla pero asi va ???
 			{
 				*posX = tileSize * x - size.x;
 				return true;
@@ -207,7 +210,7 @@ bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, i
 	{
 		if(map[y*mapSize.x+x] != COLISIONINDEX)
 		{
-			if(*posY - tileSize * y + size.y <= 11) // preguntar porque con 8 falla pero asi va ???
+			if(*posY - tileSize * y + size.y <= 16) // preguntar porque con 8 falla pero asi va ???
 			{
 				*posY = tileSize * y - size.y;
 				return true;

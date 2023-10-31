@@ -20,12 +20,13 @@ public:
 	
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
+	void setMinCoords(const glm::vec2 &coord);
 
 	glm::ivec2 getPosition();
 	
 private:
 	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer;
+	glm::ivec2 tileMapDispl, posPlayer, minCoords;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
@@ -34,7 +35,7 @@ private:
 	bool inControl;
 	bool isStar;
 	bool isEliminated;
-	int velocity;
+	double velocity;
 };
 
 

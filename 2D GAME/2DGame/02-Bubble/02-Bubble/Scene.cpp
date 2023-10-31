@@ -10,12 +10,14 @@
 #define SCREEN_Y 0
 
 #define INIT_PLAYER_X_TILES 0
-#define INIT_PLAYER_Y_TILES 0
+#define INIT_PLAYER_Y_TILES 13
+
+#define CAMERA_VELOCITY 2
 
 
 Scene::Scene()
 {
-	map = NULL;
+	map = background = entities = NULL;
 	player = NULL;
 }
 
@@ -32,35 +34,35 @@ void Scene::init()
 {
 	initShaders();
 	//mirar porque no va si cambio el nombre
-	map = TileMap::createTileMap("levels/level01.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	//background = TileMap::createTileMap("levels/testingBackground.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
-	//map = TileMap::createTileMap("levels/testingMap.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	map = TileMap::createTileMap("levels/01-map.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	background = TileMap::createTileMap("levels/01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	entities = TileMap::createTileMap("levels/01-entities.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
+	posCamera = glm::ivec2(-SCREEN_WIDTH, -SCREEN_HEIGHT);
+	updateCamera();
+	//projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	modelview = glm::mat4(1.0f);
 	currentTime = 0.0f;
 }
 
 void Scene::updateCamera() {
-    // Obtenemos la posición actual del jugador.
-    glm::ivec2 playerPosition = player->getPosition();
-	int mapWidth = map->getMapSize().x * map->getTileSize();
-    int mapHeight = map->getMapSize().y * map->getTileSize();
+	// Obtenemos la posición actual del jugador.
+	glm::ivec2 playerPosition = player->getPosition();
+	if(playerPosition.x >= (posCamera.x + (SCREEN_WIDTH / 3))) {
+		// Calcula el centro de la ventana visible.
+		posCamera.x = playerPosition.x - (SCREEN_WIDTH / 3);
 
-    // Calcula el centro de la ventana visible.
-   int cameraX = playerPosition.x - (SCREEN_WIDTH / 2);
-   int cameraY = playerPosition.y - (SCREEN_HEIGHT / 2);
-
-    // Asegúrate de que la cámara no se salga de los límites del mapa.
-
-    cameraX = glm::clamp(cameraX, 0, mapWidth - SCREEN_WIDTH);
-    cameraY = glm::clamp(cameraY, 0, mapHeight - SCREEN_HEIGHT);
-
-    // Actualiza la matriz de vista para reflejar la posición de la cámara.
-    projection = glm::ortho(0.f + cameraX, float(SCREEN_WIDTH) + cameraX, float(SCREEN_HEIGHT) + cameraY, 0.f + cameraY);
+		// Asegúrate de que la cámara no se salga de los límites del mapa.
+		int mapWidth = map->getMapSize().x * map->getTileSize();
+		posCamera.x = glm::clamp(posCamera.x, 0, mapWidth - SCREEN_WIDTH);
+		player -> setMinCoords(posCamera);
+		// Actualiza la matriz de vista para reflejar la posición de la cámara.
+		int mapHeight = map->getMapSize().y * map->getTileSize();
+		projection = glm::ortho(0.f + posCamera.x, float(SCREEN_WIDTH) + posCamera.x, float(mapHeight), 0.f);
+	}
 }
 
 void Scene::update(int deltaTime)
@@ -80,7 +82,9 @@ void Scene::render()
 	//modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+	background -> render();
 	map->render();
+	entities -> render();
 	player->render();
 }
 

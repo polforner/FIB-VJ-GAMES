@@ -7,13 +7,16 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 192
-#define FALL_STEP 8
-#define ACCELERATION 1
-#define INI_VELOCITY 2
-#define MAX_VELOCITY 5
+#define JUMP_HEIGHT 256
+#define FALL_STEP 16
+#define ACCELERATION 0.01
+#define DESACCELERATION 0.05
+#define INI_VELOCITY 0.0
+#define MAX_VELOCITY 8.0
 
 
+#define SIZE_X 56
+#define SIZE_Y 64
 
 
 /* FALTA POR HACER: 
@@ -44,7 +47,6 @@ enum PlayerAnims
 {
 	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, GRAB_FLAG, ELIMINATE, JUMP_RIGHT, JUMP_LEFT
 };
-
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
@@ -99,13 +101,15 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)/* and (inControl)*/)
 	{
-		if(sprite->animation() != MOVE_LEFT)
+		if(sprite->animation() != MOVE_LEFT) {
 			sprite->changeAnimation(MOVE_LEFT);
-		velocity = glm::min(INI_VELOCITY + ACCELERATION * deltaTime, MAX_VELOCITY);
-		posPlayer.x -= velocity;
-		if(map->collisionMoveLeft(posPlayer, glm::ivec2(64, 64)))
+			velocity = INI_VELOCITY;
+		}
+		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
+		posPlayer.x -= int(velocity);
+		if(posPlayer.x < minCoords.x || map->collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y)))
 		{
-			posPlayer.x += velocity;
+			posPlayer.x += int(velocity);
 			velocity = INI_VELOCITY;
 			sprite->changeAnimation(STAND_LEFT);
 		}
@@ -113,26 +117,23 @@ void Player::update(int deltaTime)
 	}
 	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT) /* and inControl */)
 	{
-		if(sprite->animation() != MOVE_RIGHT)
+		if(sprite->animation() != MOVE_RIGHT){
 			sprite->changeAnimation(MOVE_RIGHT);
-		velocity = glm::min(INI_VELOCITY + ACCELERATION * deltaTime, MAX_VELOCITY);
-		posPlayer.x += velocity;
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(64, 64), &posPlayer.x))
+			velocity = INI_VELOCITY;
+		}
+
+		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
+		posPlayer.x += int(velocity);
+		if(map->collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x))
 		{
-			//posPlayer.x -= velocity;
+			//posPlayer.x -= int(velocity);
 			velocity = INI_VELOCITY;
 			sprite->changeAnimation(STAND_RIGHT);
 		}
 	}
-	else if (Game::instance().getSpecialKey(GLUT_KEY_DOWN)/* and (inControl)*/)
-	{
-		if (sprite->animation() != ELIMINATE)
-			sprite->changeAnimation(JUMP_RIGHT);
-		
-
-	}
 	else
 	{
+		velocity = glm::max(velocity - DESACCELERATION * deltaTime, INI_VELOCITY);
 		if(sprite->animation() == MOVE_LEFT)
 			sprite->changeAnimation(STAND_LEFT);
 		else if(sprite->animation() == MOVE_RIGHT)
@@ -151,9 +152,9 @@ void Player::update(int deltaTime)
 		{
 			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(64, 64), &posPlayer.y);
+				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
 			else {
-				if (map -> collisionMoveUp(posPlayer, glm::ivec2(64, 64), &posPlayer.y)) {
+				if (map -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y)) {
 					bJumping = false;
 				}
 			}
@@ -162,7 +163,7 @@ void Player::update(int deltaTime)
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(64, 64), &posPlayer.y))
+		if(map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y))
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{
@@ -181,10 +182,6 @@ void Player::update(int deltaTime)
 
 	}
 	
-	//int mapWidth = map->getMapSize().x * map->getTileSize();
-    //int mapHeight = map->getMapSize().y * map->getTileSize();
-	//posPlayer.x = glm::clamp(posPlayer.x, 0, mapWidth - SCREEN_WIDTH);
-    //posPlayer.y = glm::clamp(posPlayer.y, 0, mapHeight - SCREEN_HEIGHT);
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
@@ -202,6 +199,10 @@ void Player::setPosition(const glm::vec2 &pos)
 {
 	posPlayer = pos;
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
+}
+
+void Player::setMinCoords(const glm::vec2 &coord) {
+	minCoords = coord;
 }
 
 glm::ivec2 Player::getPosition() {
