@@ -47,53 +47,57 @@ enum PlayerAnims
 {
 	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, GRAB_FLAG, ELIMINATE, JUMP_RIGHT, JUMP_LEFT
 };
+enum State {
+	SMALL, BIG, STAR
+};
 
-void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
-{
-	inControl = true; 
-	isSmall = true;
-	isStar = false;
-	bJumping = false;
-	velocity = INI_VELOCITY;
+void Player::configureSmallSprite(ShaderProgram &shaderProgram) {
 	spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.125, 0.125), &spritesheet, &shaderProgram);
 	sprite->setNumberAnimations(8);
 	
-		sprite->setAnimationSpeed(STAND_LEFT, 8);
-		sprite->addKeyframe(STAND_LEFT, glm::vec2(0.125f, 0.f));
+	sprite->setAnimationSpeed(STAND_LEFT, 8);
+	sprite->addKeyframe(STAND_LEFT, glm::vec2(0.125f, 0.f));
 		
-		sprite->setAnimationSpeed(STAND_RIGHT, 8);
-		sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
+	sprite->setAnimationSpeed(STAND_RIGHT, 8);
+	sprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
 		
-		sprite->setAnimationSpeed(MOVE_LEFT, 8);
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.f));
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.125f));
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.25f));
-		sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.375f));
+	sprite->setAnimationSpeed(MOVE_LEFT, 8);
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.125f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.25f));
+	sprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.375f));
 		
-		sprite->setAnimationSpeed(MOVE_RIGHT, 8);
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.f));
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.125f));
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.25f));
-		sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.375f));
+	sprite->setAnimationSpeed(MOVE_RIGHT, 8);
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.125f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.25f));
+	sprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.375f));
 
-		sprite->setAnimationSpeed(ELIMINATE, 8);
-		sprite->addKeyframe(ELIMINATE, glm::vec2(0.f, 0.750f));
+	sprite->setAnimationSpeed(ELIMINATE, 8);
+	sprite->addKeyframe(ELIMINATE, glm::vec2(0.f, 0.750f));
 
-		sprite->setAnimationSpeed(JUMP_RIGHT, 8); 
-		sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.f, 0.5f)); 
+	sprite->setAnimationSpeed(JUMP_RIGHT, 8); 
+	sprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.f, 0.5f)); 
 
-		sprite->setAnimationSpeed(JUMP_LEFT, 8);
-		sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.125f, 0.5f)); 
+	sprite->setAnimationSpeed(JUMP_LEFT, 8);
+	sprite->addKeyframe(JUMP_LEFT, glm::vec2(0.125f, 0.5f)); 
 
-		sprite->setAnimationSpeed(GRAB_FLAG, 8);
-		sprite->addKeyframe(GRAB_FLAG, glm::vec2(0.f, 0.875f));
-
+	sprite->setAnimationSpeed(GRAB_FLAG, 8);
+	sprite->addKeyframe(GRAB_FLAG, glm::vec2(0.f, 0.875f));
 		
-	sprite->changeAnimation(0);
+	sprite->changeAnimation(STAND_RIGHT);
+}
+
+void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
+{
+	inControl = true; 
+	state = SMALL;
+	bJumping = false;
+	velocity = INI_VELOCITY;
+	if (state == SMALL) configureSmallSprite(shaderProgram);
 	tileMapDispl = tileMapPos;
-	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
-	
+	//sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
 void Player::update(int deltaTime)
@@ -107,7 +111,15 @@ void Player::update(int deltaTime)
 		}
 		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
 		posPlayer.x -= int(velocity);
-		if(posPlayer.x < minCoords.x || map->collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y)))
+
+		int i = 0;
+		bool collision = false;
+		while (!collision && i < ent.size()) {
+			collision = ent[i] -> collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y));
+			++i;
+		}
+
+		if(posPlayer.x < minCoords.x || collision || map->collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y)))
 		{
 			posPlayer.x += int(velocity);
 			velocity = INI_VELOCITY;
@@ -124,7 +136,15 @@ void Player::update(int deltaTime)
 
 		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
 		posPlayer.x += int(velocity);
-		if(map->collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x))
+
+		int i = 0;
+		bool collision = false;
+		while (!collision && i < ent.size()) {
+			collision = ent[i] -> collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x);
+			++i;
+		}
+
+		if(collision || map->collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x))
 		{
 			//posPlayer.x -= int(velocity);
 			velocity = INI_VELOCITY;
@@ -151,10 +171,22 @@ void Player::update(int deltaTime)
 		else
 		{
 			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90)
-				bJumping = !map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
-			else {
-				if (map -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y)) {
+			if(jumpAngle > 90) {
+				int i = 0;
+				bool collision = false;
+				while (!collision && i < ent.size()) {
+					collision = ent[i] -> collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+					++i;
+				}
+				bJumping = !collision && !map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+			} else {
+				int i = 0;
+				bool collision = false;
+				while (!collision && i < ent.size()) {
+					collision = ent[i] -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+					++i;
+				}
+				if (collision || map -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y)) {
 					bJumping = false;
 				}
 			}
@@ -163,7 +195,13 @@ void Player::update(int deltaTime)
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		if(map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y))
+		int i = 0;
+		bool collision = false;
+		while (!collision && i < ent.size()) {
+			collision = ent[i] -> collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+			++i;
+		}
+		if(collision || map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y))
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 			{

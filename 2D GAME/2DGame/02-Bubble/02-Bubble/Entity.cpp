@@ -9,6 +9,11 @@ void Entity::render() {
 	sprite->render();
 }
 
+bool Entity::collision(const glm::ivec2 &pos1,const glm::ivec2 &size1,const glm::ivec2 &pos2,const glm::ivec2 &size2) {
+    return pos1.x < (pos2.x + size2.x) && pos2.x < pos1.x + size1.x
+    && pos1.y < (pos2.y + size2.y) && pos2.y < pos1.y + size1.y;
+}
+
 void Entity::setTileMap(TileMap *tileMap)
 {
 	map = tileMap;

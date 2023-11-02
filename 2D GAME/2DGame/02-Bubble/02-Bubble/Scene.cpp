@@ -4,6 +4,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include "Scene.h"
 #include "Game.h"
+#include "Brick.h"
 
 
 #define SCREEN_X 0
@@ -29,6 +30,21 @@ Scene::~Scene()
 		delete player;
 }
 
+void Scene::prepareEntities() {
+	glm::ivec2 size = entities -> getMapSize();
+	int tileSize = entities -> getTileSize();
+	for (int x = 0; x < size.x; ++x) {
+		for (int y = 0; y < size.y; ++y) {
+			if ((entities -> getTileTipe(y*size.x + x)) == 11) {
+				Brick *brick = new Brick();
+				brick -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				brick -> setPosition(glm::vec2(x * tileSize,y * tileSize));
+				brick -> setTileMap(map);
+				ent.push_back(brick);
+			}
+		}
+	}
+}
 
 void Scene::init()
 {
@@ -37,10 +53,12 @@ void Scene::init()
 	map = TileMap::createTileMap("levels/01-map.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	background = TileMap::createTileMap("levels/01-background.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
 	entities = TileMap::createTileMap("levels/01-entities.txt", glm::vec2(SCREEN_X, SCREEN_Y), texProgram);
+	prepareEntities();
 	player = new Player();
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
+	player ->setEntities(ent);
 	posCamera = glm::ivec2(-SCREEN_WIDTH, -SCREEN_HEIGHT);
 	updateCamera();
 	//projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
@@ -69,22 +87,26 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
+	int numEntities = ent.size();
+	for (int i = 0; i < numEntities; ++i)
+		if (ent[i] -> isEntityActive()) ent[i] -> update(deltaTime);
 	updateCamera();
 }
 
 void Scene::render()
 {
-	//glm::mat4 modelview;
-
 	texProgram.use();
 	texProgram.setUniformMatrix4f("projection", projection);
 	texProgram.setUniform4f("color", 1.0f, 1.0f, 1.0f, 1.0f);
-	//modelview = glm::mat4(1.0f);
 	texProgram.setUniformMatrix4f("modelview", modelview);
 	texProgram.setUniform2f("texCoordDispl", 0.f, 0.f);
+
 	background -> render();
 	map->render();
-	entities -> render();
+	//entities -> render();
+	int numEntities = ent.size();
+	for (int i = 0; i < numEntities; ++i)
+		if (ent[i] -> isEntityActive()) ent[i] -> render();
 	player->render();
 }
 

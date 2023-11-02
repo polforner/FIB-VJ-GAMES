@@ -4,6 +4,8 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
+#include "Entity.h"
+#include<vector>
 
 
 // Player is basically a Sprite that represents the player. As such it has
@@ -21,21 +23,25 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	void setMinCoords(const glm::vec2 &coord);
+	void setEntities(const vector<Entity*> &entities) {ent = entities;};
 
 	glm::ivec2 getPosition();
 	
 private:
+
+	void configureSmallSprite(ShaderProgram &shaderProgram);
+
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer, minCoords;
 	int jumpAngle, startY;
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
-	bool isSmall; 
+	int state;
 	bool inControl;
-	bool isStar;
 	bool isEliminated;
 	double velocity;
+	vector<Entity*> ent;
 };
 
 

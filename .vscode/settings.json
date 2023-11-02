@@ -1,7 +1,14 @@
 {
     "files.associations": {
         "cmath": "cpp",
-        "xstring": "cpp"
+        "xstring": "cpp",
+        "array": "cpp",
+        "initializer_list": "cpp",
+        "type_traits": "cpp",
+        "vector": "cpp",
+        "xutility": "cpp",
+        "iosfwd": "cpp",
+        "xlocbuf": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "enabled"
 }
