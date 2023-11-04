@@ -8,6 +8,7 @@
 #include "TileMap.h"
 #include "Player.h"
 #include "Entity.h"
+#include "Block.h"
 
 
 // Scene contains all the entities of our game.
@@ -38,7 +39,8 @@ private:
 	float currentTime;
 	glm::ivec2 posCamera;
 	glm::mat4 projection, modelview;
-	vector<Entity*> solid, colectables, enemies, ent;
+	//vector<Entity*> solid, colectables, enemies, ent;
+	vector<Block*> blocks;
 
 };
 

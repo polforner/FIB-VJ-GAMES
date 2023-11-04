@@ -7,7 +7,7 @@
 
 
 #define JUMP_ANGLE_STEP 4
-#define JUMP_HEIGHT 256
+#define JUMP_HEIGHT 288
 #define FALL_STEP 16
 #define ACCELERATION 0.01
 #define DESACCELERATION 0.05
@@ -23,11 +23,11 @@
 
 	- Que el spritesheet sea el mismo, pero 32 x 64, cuando coge una seta
 	- Lo mismo al reves cuando recibe da�o 
-	- Implementar la logica de enemigos (animaciones, col, boxes...) 
-	- Movimiento de Mario: aceleracion, la camara lo sigue, (A�adir sprite y) implementar animacion freno, etc.
-	- Crear clase para las entidades que faltan: Coin, Bandera y Koopa. 
+	- Implemblocksar la logica de enemigos (animaciones, col, boxes...) 
+	- Movimiblockso de Mario: aceleracion, la camara lo sigue, (A�adir sprite y) implemblocksar animacion freno, etc.
+	- Crear clase para las blocksidades que faltan: Coin, Bandera y Koopa. 
 	- Dise�ar el segundo nivel
-	- Arreglar el movimiento de c�mara. 
+	- Arreglar el movimiblockso de c�mara. 
 	- Hacer que salte m�s ( salta 4 bloques en el juego original) 
 	- Gestionar estados 
 	- Rehacer sprites sin zooms  
@@ -37,8 +37,8 @@
 
 	COSAS VARIAS
 	- Las animaciones de mario van bien todas
-		�Falta implementar que use las de saltar cuando salta
-		�Falta implementar las animaciones de Goomba, Koopa, Coin
+		�Falta implemblocksar que use las de saltar cuando salta
+		�Falta implemblocksar las animaciones de Goomba, Koopa, Coin
 	- Falta arreglar lo de la camara
 
 
@@ -49,6 +49,9 @@ enum PlayerAnims
 };
 enum State {
 	SMALL, BIG, STAR
+};
+enum Dir {
+	LEFT, RIGHT, DOWN, UP
 };
 
 void Player::configureSmallSprite(ShaderProgram &shaderProgram) {
@@ -89,6 +92,32 @@ void Player::configureSmallSprite(ShaderProgram &shaderProgram) {
 	sprite->changeAnimation(STAND_RIGHT);
 }
 
+bool Player::isBlockCollision(const int &dir) {
+	int i = 0;
+	bool someCollision = false;
+	while (i < blocks.size()) {
+		if (blocks[i] -> isEntityActive()) {
+			bool collision = false;
+			if (dir == LEFT) 
+				collision = blocks[i] -> collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y));
+			else if (dir == RIGHT) 
+				collision = blocks[i] -> collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x);
+			else if (dir == DOWN) 
+				collision = blocks[i] -> collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+			else if (dir == UP) 
+				collision = blocks[i] -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+			
+			if (dir == UP && collision) {
+				if (state == SMALL) blocks[i] -> hit();
+				else blocks[i] -> destroy();
+			}
+			if (collision) someCollision = true;
+		}
+		++i;
+	}
+	return someCollision;
+}
+
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	inControl = true; 
@@ -112,13 +141,7 @@ void Player::update(int deltaTime)
 		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
 		posPlayer.x -= int(velocity);
 
-		int i = 0;
-		bool collision = false;
-		while (!collision && i < ent.size()) {
-			collision = ent[i] -> collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y));
-			++i;
-		}
-
+		bool collision = isBlockCollision(LEFT);
 		if(posPlayer.x < minCoords.x || collision || map->collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y)))
 		{
 			posPlayer.x += int(velocity);
@@ -137,13 +160,7 @@ void Player::update(int deltaTime)
 		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
 		posPlayer.x += int(velocity);
 
-		int i = 0;
-		bool collision = false;
-		while (!collision && i < ent.size()) {
-			collision = ent[i] -> collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x);
-			++i;
-		}
-
+		bool collision = isBlockCollision(RIGHT);
 		if(collision || map->collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x))
 		{
 			//posPlayer.x -= int(velocity);
@@ -174,18 +191,13 @@ void Player::update(int deltaTime)
 			if(jumpAngle > 90) {
 				int i = 0;
 				bool collision = false;
-				while (!collision && i < ent.size()) {
-					collision = ent[i] -> collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+				while (!collision && i < blocks.size()) {
+					collision = blocks[i] -> collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
 					++i;
 				}
 				bJumping = !collision && !map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
 			} else {
-				int i = 0;
-				bool collision = false;
-				while (!collision && i < ent.size()) {
-					collision = ent[i] -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
-					++i;
-				}
+				bool collision = isBlockCollision(UP);
 				if (collision || map -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y)) {
 					bJumping = false;
 				}
@@ -195,12 +207,7 @@ void Player::update(int deltaTime)
 	else
 	{
 		posPlayer.y += FALL_STEP;
-		int i = 0;
-		bool collision = false;
-		while (!collision && i < ent.size()) {
-			collision = ent[i] -> collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
-			++i;
-		}
+		bool collision = isBlockCollision(DOWN);
 		if(collision || map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y))
 		{
 			if(Game::instance().getSpecialKey(GLUT_KEY_UP))

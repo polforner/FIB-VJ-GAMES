@@ -5,6 +5,8 @@
 #include "Scene.h"
 #include "Game.h"
 #include "Brick.h"
+#include "QuestionMark.h"
+#include "Coin.h"
 
 
 #define SCREEN_X 0
@@ -35,12 +37,16 @@ void Scene::prepareEntities() {
 	int tileSize = entities -> getTileSize();
 	for (int x = 0; x < size.x; ++x) {
 		for (int y = 0; y < size.y; ++y) {
-			if ((entities -> getTileTipe(y*size.x + x)) == 11) {
-				Brick *brick = new Brick();
-				brick -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
-				brick -> setPosition(glm::vec2(x * tileSize,y * tileSize));
-				brick -> setTileMap(map);
-				ent.push_back(brick);
+			Block *block = nullptr;
+			int tileTipe = entities -> getTileTipe(y*size.x + x);
+			if (tileTipe == 11) block = new Brick();
+			else if (tileTipe == 3) block = new QuestionMark();
+			//else if (tileTipe == 23) temp = new Coin();
+			if(block) {
+				block -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				block -> setPosition(glm::vec2(x * tileSize,y * tileSize));
+				block -> setTileMap(map);
+				blocks.push_back(block);
 			}
 		}
 	}
@@ -58,7 +64,8 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	player ->setEntities(ent);
+	//player ->setEntities(blocks);
+	player -> setBlocks(blocks);
 	posCamera = glm::ivec2(-SCREEN_WIDTH, -SCREEN_HEIGHT);
 	updateCamera();
 	//projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
@@ -87,9 +94,9 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	int numEntities = ent.size();
+	int numEntities = blocks.size();
 	for (int i = 0; i < numEntities; ++i)
-		if (ent[i] -> isEntityActive()) ent[i] -> update(deltaTime);
+		if (blocks[i] -> isEntityActive()) blocks[i] -> update(deltaTime);
 	updateCamera();
 }
 
@@ -104,9 +111,9 @@ void Scene::render()
 	background -> render();
 	map->render();
 	//entities -> render();
-	int numEntities = ent.size();
+	int numEntities = blocks.size();
 	for (int i = 0; i < numEntities; ++i)
-		if (ent[i] -> isEntityActive()) ent[i] -> render();
+		if (blocks[i] -> isEntityActive()) blocks[i] -> render();
 	player->render();
 }
 

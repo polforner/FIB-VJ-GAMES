@@ -8,7 +8,14 @@
         "vector": "cpp",
         "xutility": "cpp",
         "iosfwd": "cpp",
-        "xlocbuf": "cpp"
+        "xlocbuf": "cpp",
+        "ios": "cpp",
+        "xmemory0": "cpp",
+        "functional": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "xstddef": "cpp",
+        "xtr1common": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

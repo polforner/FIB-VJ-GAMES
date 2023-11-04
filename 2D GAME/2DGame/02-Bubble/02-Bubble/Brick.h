@@ -3,9 +3,9 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
-#include "Entity.h"
+#include "Block.h"
 
-class Brick : public Entity{
+class Brick : public Block{
 
 public:
     void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) override;
@@ -15,7 +15,13 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) override;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) override;
 	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) override;
+
+	void hit() override;
+    void destroy() override;
 private:
-    bool isHit, isDestroyed;
+
+	int type, numCoins;
+	int jumpAngle, originalY;
+	int breakingTime;
 };
 #endif

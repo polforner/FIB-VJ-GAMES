@@ -26,11 +26,10 @@ protected:
 	Texture spritesheet;
 	Sprite *sprite;
 	TileMap *map;
-
+	bool isActive;
 	bool collision(const glm::ivec2 &pos1,const glm::ivec2 &size1,const glm::ivec2 &pos2,const glm::ivec2 &size2);
 
 private:
-	bool isActive;
 };
 
 
