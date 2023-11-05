@@ -57,7 +57,7 @@ void Brick::update(int deltaTime) {
             sprite->changeAnimation(NORMAL);
         }
 		else {
-            int y = int(originalY - BRICK_JUMP_ANGLE_STEP * sin(3.14159f * jumpAngle / 180.f));
+            int y = int(originalY - BRICK_JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
             setPosition(glm::ivec2(position.x,y));
         }
     }

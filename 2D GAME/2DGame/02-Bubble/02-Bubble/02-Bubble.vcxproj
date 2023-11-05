@@ -19,6 +19,8 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Koopa.h" />
+    <ClInclude Include="Mushroom.h" />
+    <ClInclude Include="PickUp.h" />
     <ClInclude Include="Piranha.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="questionMark.h" />
@@ -38,6 +40,8 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Mushroom.cpp" />
+    <ClCompile Include="PickUp.cpp" />
     <ClCompile Include="Piranha.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="questionMark.cpp" />

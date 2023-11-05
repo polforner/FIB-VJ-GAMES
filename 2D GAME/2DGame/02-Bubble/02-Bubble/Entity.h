@@ -17,7 +17,7 @@ public:
 	virtual bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) = 0;
 
 	void setTileMap(TileMap *tileMap);
-	void setPosition(const glm::vec2 &pos);
+	virtual void setPosition(const glm::vec2 &pos);
 	bool isEntityActive() {return isActive;}
 
 

@@ -118,6 +118,31 @@ bool Player::isBlockCollision(const int &dir) {
 	return someCollision;
 }
 
+bool Player::isPickUpCollision(const int &dir) {
+	int i = 0;
+	while (i < pickUps.size()) {
+		if (pickUps[i] -> isEntityActive()) {
+			bool collision = false;
+			if (dir == LEFT) 
+				collision = pickUps[i] -> collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y));
+			else if (dir == RIGHT) 
+				collision = pickUps[i] -> collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x);
+			else if (dir == DOWN) 
+				collision = pickUps[i] -> collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+			else if (dir == UP) 
+				collision = pickUps[i] -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
+			
+			if (collision) {
+				int effect = pickUps[i] -> pick();
+				//if (state == SMALL) state = BIG;
+				//else state = SMALL;
+			}
+		}
+		++i;
+	}
+	return false;
+}
+
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
 	inControl = true; 
@@ -141,6 +166,7 @@ void Player::update(int deltaTime)
 		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
 		posPlayer.x -= int(velocity);
 
+		isPickUpCollision(LEFT);
 		bool collision = isBlockCollision(LEFT);
 		if(posPlayer.x < minCoords.x || collision || map->collisionMoveLeft(posPlayer, glm::ivec2(SIZE_X, SIZE_Y)))
 		{
@@ -160,6 +186,7 @@ void Player::update(int deltaTime)
 		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
 		posPlayer.x += int(velocity);
 
+		isPickUpCollision(RIGHT);
 		bool collision = isBlockCollision(RIGHT);
 		if(collision || map->collisionMoveRight(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.x))
 		{
@@ -190,13 +217,15 @@ void Player::update(int deltaTime)
 			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 			if(jumpAngle > 90) {
 				int i = 0;
-				bool collision = false;
+				isPickUpCollision(DOWN);
+				bool collision = isBlockCollision(DOWN);
 				while (!collision && i < blocks.size()) {
 					collision = blocks[i] -> collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
 					++i;
 				}
 				bJumping = !collision && !map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y);
 			} else {
+				isPickUpCollision(UP);
 				bool collision = isBlockCollision(UP);
 				if (collision || map -> collisionMoveUp(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y)) {
 					bJumping = false;
@@ -207,6 +236,7 @@ void Player::update(int deltaTime)
 	else
 	{
 		posPlayer.y += FALL_STEP;
+		isPickUpCollision(DOWN);
 		bool collision = isBlockCollision(DOWN);
 		if(collision || map->collisionMoveDown(posPlayer, glm::ivec2(SIZE_X, SIZE_Y), &posPlayer.y))
 		{

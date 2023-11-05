@@ -38,15 +38,25 @@ void Scene::prepareEntities() {
 	for (int x = 0; x < size.x; ++x) {
 		for (int y = 0; y < size.y; ++y) {
 			Block *block = nullptr;
+			PickUp *pickUp = nullptr;
 			int tileTipe = entities -> getTileTipe(y*size.x + x);
 			if (tileTipe == 11) block = new Brick();
-			else if (tileTipe == 3) block = new QuestionMark();
-			//else if (tileTipe == 23) temp = new Coin();
+			else if (tileTipe == 3) { 
+				block = new QuestionMark();
+				pickUp = new Coin();
+			}
+			else if (tileTipe == 23) pickUp = new Coin();
 			if(block) {
 				block -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 				block -> setPosition(glm::vec2(x * tileSize,y * tileSize));
 				block -> setTileMap(map);
 				blocks.push_back(block);
+			}
+			if (pickUp) {
+				pickUp -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				pickUp -> setPosition(glm::vec2(x * tileSize,y * tileSize));
+				pickUp -> setTileMap(map);
+				pickUps.push_back(pickUp);	
 			}
 		}
 	}
@@ -66,6 +76,7 @@ void Scene::init()
 	player->setTileMap(map);
 	//player ->setEntities(blocks);
 	player -> setBlocks(blocks);
+	player -> setPickUps(pickUps);
 	posCamera = glm::ivec2(-SCREEN_WIDTH, -SCREEN_HEIGHT);
 	updateCamera();
 	//projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
@@ -94,9 +105,14 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	int numEntities = blocks.size();
-	for (int i = 0; i < numEntities; ++i)
+	int numBlocks = blocks.size();
+	for (int i = 0; i < numBlocks; ++i)
 		if (blocks[i] -> isEntityActive()) blocks[i] -> update(deltaTime);
+
+	int numPickUps = pickUps.size();
+	for (int i = 0; i < numPickUps; ++i)
+		if (pickUps[i] -> isEntityActive()) pickUps[i] -> update(deltaTime);
+
 	updateCamera();
 }
 
@@ -111,9 +127,14 @@ void Scene::render()
 	background -> render();
 	map->render();
 	//entities -> render();
-	int numEntities = blocks.size();
-	for (int i = 0; i < numEntities; ++i)
+	int numBlocks = blocks.size();
+	for (int i = 0; i < numBlocks; ++i)
 		if (blocks[i] -> isEntityActive()) blocks[i] -> render();
+
+	int numPickUps = pickUps.size();
+	for (int i = 0; i < numPickUps; ++i)
+		if (pickUps[i] -> isEntityActive()) pickUps[i] -> render();
+
 	player->render();
 }
 

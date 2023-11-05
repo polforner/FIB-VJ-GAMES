@@ -3,9 +3,9 @@
 
 #include "Sprite.h"
 #include "TileMap.h"
-#include "Entity.h"
+#include "PickUp.h"
 
-class Coin : public Entity {
+class Coin : public PickUp {
 
 public:
     void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) override;
@@ -15,7 +15,10 @@ public:
 	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) override;
 	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) override;
 	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) override;
+
+	void setPosition(const glm::vec2 &pos) override;
+	int pick() override;
 private:
-    bool isHit;
+	int jumpAngle, originalY;
 };
 #endif

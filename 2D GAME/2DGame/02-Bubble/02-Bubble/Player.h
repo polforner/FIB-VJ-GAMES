@@ -6,6 +6,7 @@
 #include "TileMap.h"
 #include "Entity.h"
 #include "Block.h"
+#include "PickUp.h"
 #include <vector>
 
 
@@ -26,6 +27,7 @@ public:
 	void setMinCoords(const glm::vec2 &coord);
 	//void setEntities(const vector<Entity*> &entities) {ent = entities;};
 	void setBlocks(const vector<Block*> &b) {blocks = b;};
+	void setPickUps(const vector<PickUp*> &p) {pickUps = p;};
 
 	glm::ivec2 getPosition();
 	
@@ -33,6 +35,7 @@ private:
 
 	void configureSmallSprite(ShaderProgram &shaderProgram);
 	bool isBlockCollision(const int &dir);
+	bool isPickUpCollision(const int &dir);
 
 	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer, minCoords;
@@ -46,6 +49,7 @@ private:
 	double velocity;
 	//vector<Entity*> ent;
 	vector<Block*> blocks;
+	vector<PickUp*> pickUps;
 };
 
 
