@@ -7,13 +7,15 @@
 #include "Brick.h"
 #include "QuestionMark.h"
 #include "Coin.h"
-
+#include "Mushroom.h"
+#include "Star.h"
+#include "Goomba.h"
 
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
 #define INIT_PLAYER_X_TILES 0
-#define INIT_PLAYER_Y_TILES 13
+#define INIT_PLAYER_Y_TILES 12
 
 #define CAMERA_VELOCITY 2
 
@@ -39,13 +41,16 @@ void Scene::prepareEntities() {
 		for (int y = 0; y < size.y; ++y) {
 			Block *block = nullptr;
 			PickUp *pickUp = nullptr;
+			Enemy *enemy = nullptr;
 			int tileTipe = entities -> getTileTipe(y*size.x + x);
 			if (tileTipe == 11) block = new Brick();
 			else if (tileTipe == 3) { 
 				block = new QuestionMark();
-				pickUp = new Coin();
+				pickUp = new Star();
 			}
 			else if (tileTipe == 23) pickUp = new Coin();
+			else if (tileTipe == 24) enemy = new Goomba();
+			
 			if(block) {
 				block -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 				block -> setPosition(glm::vec2(x * tileSize,y * tileSize));
@@ -57,6 +62,12 @@ void Scene::prepareEntities() {
 				pickUp -> setPosition(glm::vec2(x * tileSize,y * tileSize));
 				pickUp -> setTileMap(map);
 				pickUps.push_back(pickUp);	
+			}
+			if (enemy) {
+				enemy -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
+				enemy -> setPosition(glm::vec2(x * tileSize,y * tileSize));
+				enemy -> setTileMap(map);
+				enemies.push_back(enemy);	
 			}
 		}
 	}
@@ -74,9 +85,9 @@ void Scene::init()
 	player->init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 	player->setPosition(glm::vec2(INIT_PLAYER_X_TILES * map->getTileSize(), INIT_PLAYER_Y_TILES * map->getTileSize()));
 	player->setTileMap(map);
-	//player ->setEntities(blocks);
 	player -> setBlocks(blocks);
 	player -> setPickUps(pickUps);
+	player -> setEnemies(enemies);
 	posCamera = glm::ivec2(-SCREEN_WIDTH, -SCREEN_HEIGHT);
 	updateCamera();
 	//projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
@@ -134,6 +145,10 @@ void Scene::render()
 	int numPickUps = pickUps.size();
 	for (int i = 0; i < numPickUps; ++i)
 		if (pickUps[i] -> isEntityActive()) pickUps[i] -> render();
+
+	int numEnemies = enemies.size();
+	for (int i = 0; i < numEnemies; ++i)
+		if (enemies[i] -> isEntityActive()) enemies[i] -> render();
 
 	player->render();
 }

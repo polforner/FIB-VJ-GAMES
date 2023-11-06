@@ -7,6 +7,7 @@
 #include "Entity.h"
 #include "Block.h"
 #include "PickUp.h"
+#include "Enemy.h"
 #include <vector>
 
 
@@ -25,31 +26,41 @@ public:
 	void setTileMap(TileMap *tileMap);
 	void setPosition(const glm::vec2 &pos);
 	void setMinCoords(const glm::vec2 &coord);
-	//void setEntities(const vector<Entity*> &entities) {ent = entities;};
 	void setBlocks(const vector<Block*> &b) {blocks = b;};
 	void setPickUps(const vector<PickUp*> &p) {pickUps = p;};
+	void setEnemies(const vector<Enemy*> &e) {enemies = e;};
 
 	glm::ivec2 getPosition();
 	
 private:
 
 	void configureSmallSprite(ShaderProgram &shaderProgram);
+	void configureBigSprite(ShaderProgram &shaderProgram);
+	void configureSmallStarSprite(ShaderProgram &shaderProgram);
+	void configureBigStarSprite(ShaderProgram &shaderProgram);
 	bool isBlockCollision(const int &dir);
 	bool isPickUpCollision(const int &dir);
+	void configureSprites(ShaderProgram &shaderProgram);
+	void selectSprite();
+
 
 	bool bJumping;
-	glm::ivec2 tileMapDispl, posPlayer, minCoords;
+	glm::ivec2 tileMapDispl, posPlayer, minCoords, size;
 	int jumpAngle, startY;
 	Texture spritesheet;
-	Sprite *sprite;
+	Sprite *sprite, *smallSprite, *bigSprite, *smallStarSprite, *bigStarSprite;
 	TileMap *map;
 	int state;
+	bool changeState;
 	bool inControl;
 	bool isEliminated;
 	double velocity;
-	//vector<Entity*> ent;
+
+
 	vector<Block*> blocks;
 	vector<PickUp*> pickUps;
+	vector<Enemy*> enemies;
+	int coins, score;
 };
 
 

@@ -3,10 +3,6 @@
 #define SIZE_X 32
 #define SIZE_Y 32
 
-#define COIN_JUMP_ANGLE_STEP 8
-#define COIN_JUMP_HEIGHT 256
-
-
 enum States
 {
 	WAITING, MOVING_LEFT, MOVING_RIGHT
@@ -16,7 +12,7 @@ void Mushroom::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) 
     PickUp::init(tileMapPos, shaderProgram);
 
     spritesheet.loadFromFile("images/spritesItems.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.5, 0.5), &spritesheet, &shaderProgram);
+    sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5, 0.5), &spritesheet, &shaderProgram);
     sprite->setNumberAnimations(3);
 
     sprite->setAnimationSpeed(WAITING, 8);
@@ -37,7 +33,7 @@ void Mushroom::update(int deltaTime) {
     if (isPicked) {
         if (sprite -> animation() == WAITING) {
             sprite->changeAnimation(MOVING_RIGHT);
-            setPosition(glm::ivec2(position.x,position.y - 64));
+            Entity::setPosition(glm::ivec2(position.x,position.y - 64));
         }
         else isActive = false;   
         isPicked = false;
@@ -47,7 +43,7 @@ void Mushroom::update(int deltaTime) {
 int Mushroom::pick() {
     isPicked = true;
     if (sprite -> animation() == WAITING) return 0;
-    return 1;
+    return 2;
 }
 
 bool Mushroom::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) 
@@ -80,4 +76,9 @@ bool Mushroom::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, in
 		return true;
     }
     return false;
+}
+
+void Mushroom::setPosition(const glm::vec2 &pos) {
+    position = glm::ivec2(pos.x + 16, pos.y + 32);
+    sprite->setPosition(glm::vec2(float(tileMapDispl.x + position.x), float(tileMapDispl.y + position.y)));
 }
