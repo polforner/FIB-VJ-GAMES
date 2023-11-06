@@ -7,10 +7,8 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
-
 #include "Entity.h"
 #include "Block.h"
-#include "PickUp.h"
 
 
 // Scene contains all the entities of our game.
@@ -24,7 +22,11 @@ public:
 	Scene();
 	~Scene();
 
-	void init();
+	void init1();
+	void init2();
+	void initMain();
+	void initCredits();
+	void initInstr();
 	void update(int deltaTime);
 	void render();
 
@@ -43,10 +45,9 @@ private:
 	glm::mat4 projection, modelview;
 	//vector<Entity*> solid, colectables, enemies, ent;
 	vector<Block*> blocks;
-	vector<PickUp*> pickUps;
+	string curScene;
 
 };
 
 
 #endif // _SCENE_INCLUDE
-
