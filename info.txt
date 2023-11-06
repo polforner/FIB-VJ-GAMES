@@ -1,0 +1,37 @@
+2D game - Curs 2023-24 Quatrimestre tardor
+
+Pol Forner Gomez
+Ignacio Folgueiras Bosque 
+
+Funcionalitats implementades: 
+-2 Nivells
+-Pantalla inici, credits, instruccions 
+-Enemics
+-3 tipus d'enemics
+  -Goomba: es mou de costat a costat
+  -Koopa: deixa la closca quan és eliminat
+  -Planta piranya: Enemic estatic
+-Espai per saltar, Shift per accelerar
+-2 power-ups, que poden sortir dels blocs "?": 
+  -Bolet: Mario creix i guanya 1 punt de vida, a més de poder trencar totxos. 
+  -Estrella: Mario és invulnerable durant uns pocs segons. 
+-Mario mor si toca un enemic sense cap powerup, quedant-se sense temps, o caient per un forat.
+-La càmera fa scroll cap a la dreta quan Mario es mou en aquesta direcció. 
+-Tocar la bandera dona punts //(ESTO FALTA)
+-Es mostra en cada moment les monedes, la puntuació i el temps restant. 
+-Hi ha certes tecles que salten contingut. 
+-Música de fons, efectes en agafar monedes, trencar totxos i blocs, matar enemics, etc. 
+-Animacions al córrer, morir, agafar la bandera.
+-Moviment amb Shift accelerat. 
+-La puntuació augmenta en funció del temps restant. 
+
+
+Instruccions: 
+-Al menú, cada tecla correspon a una opció.
+-Dins del joc: 
+  -Fletxes per moure. 
+  -Espai o Z per saltar. 
+  -Shift o X per córrer. 
+  -Tecles 1 i 2 per saltar a aquest nivell. 
+  -Tecla B per tornar al menú principal. 
+  -Tecles M i G per aplicar els powerups bolet i estrella respectivament. 

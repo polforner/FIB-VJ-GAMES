@@ -7,7 +7,6 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Player.h"
-
 #include "Entity.h"
 #include "Block.h"
 #include "PickUp.h"
@@ -25,7 +24,11 @@ public:
 	Scene();
 	~Scene();
 
-	void init();
+	void init1();
+	void init2();
+	void initMain();
+	void initCredits();
+	void initInstr();
 	void update(int deltaTime);
 	void render();
 
@@ -45,9 +48,10 @@ private:
 
 	vector<Block*> blocks;
 	vector<PickUp*> pickUps;
-	vector<Enemy*> enemies;
+	vector<Enemy*> enemies;	
+	string curScene;
+
 };
 
 
 #endif // _SCENE_INCLUDE
-
