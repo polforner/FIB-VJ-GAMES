@@ -38,9 +38,13 @@ private:
 	void configureBigSprite(ShaderProgram &shaderProgram);
 	void configureSmallStarSprite(ShaderProgram &shaderProgram);
 	void configureBigStarSprite(ShaderProgram &shaderProgram);
+	void configureSprites(ShaderProgram &shaderProgram);
+
 	bool isBlockCollision(const int &dir);
 	bool isPickUpCollision(const int &dir);
-	void configureSprites(ShaderProgram &shaderProgram);
+	bool isEnemyCollision(const int &dir);
+	void hit();
+
 	void selectSprite();
 
 

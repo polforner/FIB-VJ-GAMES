@@ -46,7 +46,7 @@ void Scene::prepareEntities() {
 			if (tileTipe == 11) block = new Brick();
 			else if (tileTipe == 3) { 
 				block = new QuestionMark();
-				pickUp = new Star();
+				pickUp = new Mushroom();
 			}
 			else if (tileTipe == 23) pickUp = new Coin();
 			else if (tileTipe == 24) enemy = new Goomba();
@@ -67,6 +67,7 @@ void Scene::prepareEntities() {
 				enemy -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
 				enemy -> setPosition(glm::vec2(x * tileSize,y * tileSize));
 				enemy -> setTileMap(map);
+				enemy -> setCollisions(map, blocks);
 				enemies.push_back(enemy);	
 			}
 		}
@@ -128,7 +129,6 @@ void Scene::initInstr() {
 	updateCamera();
 }
 
-
 void Scene::initMain() {
 	//clearTodo
 	//deleteAllEntities()
@@ -158,9 +158,18 @@ void Scene::update(int deltaTime)
 {
 	currentTime += deltaTime;
 	player->update(deltaTime);
-	int numEntities = blocks.size();
-	for (int i = 0; i < numEntities; ++i)
-		if (blocks[i]->isEntityActive()) blocks[i]->update(deltaTime);
+	int numBlocks = blocks.size();
+	for (int i = 0; i < numBlocks; ++i)
+		if (blocks[i] -> isEntityActive()) blocks[i] -> update(deltaTime);
+
+	int numPickUps = pickUps.size();
+	for (int i = 0; i < numPickUps; ++i)
+		if (pickUps[i] -> isEntityActive()) pickUps[i] -> update(deltaTime);
+
+	int numEnemies = enemies.size();
+	for (int i = 0; i < numEnemies; ++i)
+		if (enemies[i] -> isEntityActive()) enemies[i] -> update(deltaTime);
+	
 	updateCamera();
 }
 

@@ -17,11 +17,13 @@ public:
 	virtual bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) = 0;
 	virtual bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) = 0;
 
+	virtual void hit() = 0;
 	void setCollisions(TileMap *map, vector<Block*> &blocks);
 
 protected:
 	vector<Block*> blocks;
 	TileMap *map;
+	bool isHit;
 private:
 };
 

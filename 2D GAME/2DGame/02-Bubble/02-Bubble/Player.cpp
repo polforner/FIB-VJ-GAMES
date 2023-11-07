@@ -210,7 +210,8 @@ bool Player::isBlockCollision(const int &dir) {
 	int i = 0;
 	bool someCollision = false;
 	glm::ivec2 constPosition = posPlayer;
-	while (i < blocks.size()) {
+	int numBlocks = blocks.size();
+	while (i < numBlocks) {
 		if (blocks[i] -> isEntityActive()) {
 			bool collision = false;
 			if (dir == LEFT) 
@@ -235,7 +236,8 @@ bool Player::isBlockCollision(const int &dir) {
 
 bool Player::isPickUpCollision(const int &dir) {
 	int i = 0;
-	while (i < pickUps.size()) {
+	int numPickUps = pickUps.size();
+	while (i < numPickUps) {
 		if (pickUps[i] -> isEntityActive()) {
 			bool collision = false;
 			if (dir == LEFT) 
@@ -276,6 +278,41 @@ bool Player::isPickUpCollision(const int &dir) {
 		++i;
 	}
 	return false;
+}
+
+bool Player::isEnemyCollision(const int &dir) {
+	int i = 0;
+	bool someCollision = false;
+	glm::ivec2 constPosition = posPlayer;
+	int numEnemies = enemies.size();
+	while (i < numEnemies) {
+		if (enemies[i] -> isEntityActive()) {
+			bool collision = false;
+			if (dir == LEFT) 
+				collision = enemies[i] -> collisionMoveLeft(constPosition, size);
+			else if (dir == RIGHT) 
+				collision = enemies[i] -> collisionMoveRight(constPosition, size, &posPlayer.x);
+			else if (dir == DOWN) 
+				collision = enemies[i] -> collisionMoveDown(constPosition, size, &posPlayer.y);
+			else if (dir == UP) 
+				collision = enemies[i] -> collisionMoveUp(constPosition, size, &posPlayer.y);
+			
+			if (collision) {
+				if (dir == DOWN) enemies[i] -> hit();
+				else {
+					hit();
+					collision = false;
+				}
+			}
+			if (collision) someCollision = true;
+		}
+		++i;
+	}
+	return someCollision;	
+}
+
+void Player::hit() {
+	isEliminated = true;
 }
 
 void Player::configureSprites(ShaderProgram &shaderProgram) {
@@ -331,113 +368,119 @@ void Player::update(int deltaTime)
 		changeState = true;
 		state = BIG;
 	}
-	if (changeState) {
-		selectSprite();
-		changeState = false;
-	}
-
 	sprite->update(deltaTime);
+	if (sprite -> animation() == ELIMINATE){
+		jumpAngle += 2;
+		if(jumpAngle >= 180) posPlayer.y += FALL_STEP;
+		else posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+	}
+	else {
+		if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)/* and (inControl)*/) {
+			if(sprite->animation() != MOVE_LEFT) {
+				sprite->changeAnimation(MOVE_LEFT);
+				velocity = INI_VELOCITY;
+			}
+			velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
+			posPlayer.x -= int(velocity);
 
-	if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)/* and (inControl)*/)
-	{
-		if(sprite->animation() != MOVE_LEFT) {
-			sprite->changeAnimation(MOVE_LEFT);
-			velocity = INI_VELOCITY;
+			isPickUpCollision(LEFT);
+			bool collision = isBlockCollision(LEFT);
+			if(posPlayer.x < minCoords.x || collision || map->collisionMoveLeft(posPlayer, size))
+			{
+				posPlayer.x += int(velocity);
+				velocity = INI_VELOCITY;
+				sprite->changeAnimation(STAND_LEFT);
+			}
+
 		}
-		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
-		posPlayer.x -= int(velocity);
-
-		isPickUpCollision(LEFT);
-		bool collision = isBlockCollision(LEFT);
-		if(posPlayer.x < minCoords.x || collision || map->collisionMoveLeft(posPlayer, size))
+		else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT) /* and inControl */)
 		{
+			if(sprite->animation() != MOVE_RIGHT){
+				sprite->changeAnimation(MOVE_RIGHT);
+				velocity = INI_VELOCITY;
+			}
+
+			velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
 			posPlayer.x += int(velocity);
-			velocity = INI_VELOCITY;
-			sprite->changeAnimation(STAND_LEFT);
-		}
-
-	}
-	else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT) /* and inControl */)
-	{
-		if(sprite->animation() != MOVE_RIGHT){
-			sprite->changeAnimation(MOVE_RIGHT);
-			velocity = INI_VELOCITY;
-		}
-
-		velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
-		posPlayer.x += int(velocity);
-
-		isPickUpCollision(RIGHT);
-		bool collision = isBlockCollision(RIGHT);
-		if(collision || map->collisionMoveRight(posPlayer, size, &posPlayer.x))
-		{
-			//posPlayer.x -= int(velocity);
-			velocity = INI_VELOCITY;
-			sprite->changeAnimation(STAND_RIGHT);
-		}
-	}
-	else
-	{
-		velocity = glm::max(velocity - DESACCELERATION * deltaTime, INI_VELOCITY);
-		if(sprite->animation() == MOVE_LEFT)
-			sprite->changeAnimation(STAND_LEFT);
-		else if(sprite->animation() == MOVE_RIGHT)
-			sprite->changeAnimation(STAND_RIGHT);
-	}
-	
-	if(bJumping)
-	{
-		jumpAngle += JUMP_ANGLE_STEP;
-		if(jumpAngle == 180)
-		{
-			bJumping = false;
-			posPlayer.y = startY;
+			isPickUpCollision(RIGHT);
+			bool collision = isBlockCollision(RIGHT);
+			if(collision || map->collisionMoveRight(posPlayer, size, &posPlayer.x))
+			{
+				velocity = INI_VELOCITY;
+				sprite->changeAnimation(STAND_RIGHT);
+			}
 		}
 		else
 		{
-			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-			if(jumpAngle > 90) {
-				int i = 0;
-				isPickUpCollision(DOWN);
-				bool collision = isBlockCollision(DOWN);
-				while (!collision && i < blocks.size()) {
-					collision = blocks[i] -> collisionMoveDown(posPlayer, size, &posPlayer.y);
-					++i;
-				}
-				bJumping = !collision && !map->collisionMoveDown(posPlayer, size, &posPlayer.y);
-			} else {
-				isPickUpCollision(UP);
-				bool collision = isBlockCollision(UP);
-				if (collision || map -> collisionMoveUp(posPlayer, size, &posPlayer.y)) {
-					bJumping = false;
-				}
-			}
+			velocity = glm::max(velocity - DESACCELERATION * deltaTime, INI_VELOCITY);
+			if(sprite->animation() == MOVE_LEFT)
+				sprite->changeAnimation(STAND_LEFT);
+			else if(sprite->animation() == MOVE_RIGHT)
+				sprite->changeAnimation(STAND_RIGHT);
 		}
-	}
-	else
-	{
-		posPlayer.y += FALL_STEP;
-		isPickUpCollision(DOWN);
-		bool collision = isBlockCollision(DOWN);
-		if(collision || map->collisionMoveDown(posPlayer, size, &posPlayer.y))
+		if(bJumping)
 		{
-			if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+			jumpAngle += JUMP_ANGLE_STEP;
+			if(jumpAngle == 180)
 			{
-				bJumping = true;
-				jumpAngle = 0;
-				startY = posPlayer.y;
+				bJumping = false;
+				posPlayer.y = startY;
+			}
+			else
+			{
+				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+				if(jumpAngle > 90) {
+					isPickUpCollision(DOWN);
+					bool collision = isBlockCollision(DOWN);
+					bJumping = !collision && !map->collisionMoveDown(posPlayer, size, &posPlayer.y);
+					collision = isEnemyCollision(DOWN);
+					if (collision) {
+						bJumping = true;
+						jumpAngle = 0;
+						startY = posPlayer.y;
+					}
+				} else {
+					isPickUpCollision(UP);
+					bool collision = isBlockCollision(UP);
+					if (collision || map -> collisionMoveUp(posPlayer, size, &posPlayer.y)) {
+						bJumping = false;
+					}
+				}
 			}
 		}
+		else
+		{
+			posPlayer.y += FALL_STEP;
+			isPickUpCollision(DOWN);
+			bool collision = isBlockCollision(DOWN);
+			
+			if(collision || map->collisionMoveDown(posPlayer, size, &posPlayer.y))
+			{
+				if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+				{
+					bJumping = true;
+					jumpAngle = 0;
+					startY = posPlayer.y;
+				}
+			} else if (collision = isEnemyCollision(DOWN)) {
+					bJumping = true;
+					jumpAngle = 0;
+					startY = posPlayer.y;			
+			}
+		}
+		isEnemyCollision(RIGHT);
+		if (isEliminated) {
+			inControl = false; 
+			sprite->changeAnimation(ELIMINATE); 
+			jumpAngle = 0;
+			startY = posPlayer.y;
+			isEliminated = false;
+		}
+		if (changeState) {
+			selectSprite();
+			changeState = false;
+		}
 	}
-
-	if (isEliminated) {
-		inControl = false; 
-		sprite->changeAnimation(ELIMINATE); 
-
-		//codigo para que baje hasta abajo de la pantalla
-
-	}
-	
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 
