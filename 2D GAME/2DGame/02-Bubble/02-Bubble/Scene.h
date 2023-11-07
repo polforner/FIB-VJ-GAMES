@@ -15,13 +15,11 @@ class Scene
 {
 
 public:
-	Scene();
-	~Scene();
-
 	virtual void init() = 0;
-	void update(int deltaTime) = 0;
-	void render() = 0;
+	virtual void update(int deltaTime) = 0;
+	virtual void render() = 0;
+
+protected:
+
 };
-
-
-#endif // _SCENE_INCLUDE
+#endif

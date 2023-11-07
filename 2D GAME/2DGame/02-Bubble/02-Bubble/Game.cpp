@@ -1,18 +1,26 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
+#include "Lvl1Scene.h"
 
-
+enum Scenes {
+	MAIN, INSTR, LVL1, LVL2, CREDS, COUNT
+};
 void Game::init()
 {
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
-	scene.init1();
+	scenes = vector<Scene*> (COUNT);
+	curScene = LVL1;
+	scenes[curScene] = new Lvl1Scene();
+	scenes[curScene] -> init();
+	
+	
 }
 
 bool Game::update(int deltaTime)
 {
-	scene.update(deltaTime);
+	scenes[curScene] -> update(deltaTime);
 
 	return bPlay;
 }
@@ -20,7 +28,7 @@ bool Game::update(int deltaTime)
 void Game::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	scene.render();
+	scenes[curScene] -> render();
 }
 
 void Game::keyPressed(int key)
@@ -28,31 +36,31 @@ void Game::keyPressed(int key)
 	if (key == 27) // Escape code
 		bPlay = false;
 	if (key == 'l'){
-		if((curScene != "instr") && (curScene != "creds")){
-			scene.init1();
-			curScene = "lv1";
+		if((curScene != INSTR) && (curScene != CREDS)){
+			curScene = LVL1;
+			scenes[curScene] ->init();
 		}
 	}
 	if (key == 'p') {
-		if (curScene == "main") {
-			scene.initInstr();
-			curScene = "instr";
+		if (curScene == MAIN) {
+
+			curScene = INSTR;
 		}
-		else if (curScene == "lv1") {
-			scene.init2();
-			curScene = "lv2";
+		else if (curScene == LVL1) {
+
+			curScene = LVL2;
 		}
 	}
 	if (key == 'b') {
-		if ((curScene == "instr") || (curScene == "creds")) {
-			scene.initMain();
-			curScene = "main";
+		if ((curScene == INSTR) || (curScene == CREDS)) {
+
+			curScene = MAIN;
 		}
 	}
 	if (key == 3) {
-		if ((curScene != "lv1") && (curScene != "lv2")) {
-			scene.initCredits();
-			curScene = "creds";
+		if ((curScene != LVL1) && (curScene != LVL2)) {
+
+			curScene = CREDS;
 		}
 	}
 	keys[key] = true;

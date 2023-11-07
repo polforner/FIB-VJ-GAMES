@@ -6,13 +6,15 @@
 #include <vector>
 #include "ShaderProgram.h"
 #include "TileMap.h"
+#include "Scene.h"
+
 #include "Player.h"
 #include "Entity.h"
 #include "Block.h"
 #include "PickUp.h"
 #include "Enemy.h"
 
-class Lvl1Scene
+class Lvl1Scene : public Scene
 {
 
 public:
@@ -30,12 +32,12 @@ private:
 
 	TileMap *background, *map, *entities;
 	Player *player;
-	ShaderProgram texProgram;
 	float currentTime;
+	ShaderProgram texProgram;
 	glm::ivec2 posCamera;
 	glm::mat4 projection, modelview;
-
 	vector<Block*> blocks;
 	vector<PickUp*> pickUps;
 	vector<Enemy*> enemies;	
 };
+#endif // _SCENE_INCLUDE

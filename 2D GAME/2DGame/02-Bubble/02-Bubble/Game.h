@@ -3,6 +3,7 @@
 
 
 #include "Scene.h"
+#include <vector>
 
 
 #define SCREEN_WIDTH 640
@@ -44,10 +45,11 @@ public:
 
 private:
 	bool bPlay;                       // Continue to play game?
-	Scene scene;                      // Scene to render
+	vector<Scene*> scenes;
+	//Scene scene;                      // Scene to render
 	bool keys[256], specialKeys[256]; // Store key states so that 
 									  // we can have access at any time
-	string curScene;
+	int curScene;
 
 };
 
