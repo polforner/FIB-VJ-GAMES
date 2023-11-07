@@ -20,6 +20,7 @@
     <ClInclude Include="Game.h" />
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Koopa.h" />
+    <ClInclude Include="Lvl1Scene.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="PickUp.h" />
     <ClInclude Include="Piranha.h" />
@@ -42,6 +43,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Koopa.cpp" />
+    <ClCompile Include="Lvl1Scene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="PickUp.cpp" />
