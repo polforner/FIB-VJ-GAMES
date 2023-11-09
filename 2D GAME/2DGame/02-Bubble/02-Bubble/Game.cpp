@@ -152,8 +152,12 @@ void Game::playMusic(string queCosa) {
 		mainMusic -> stopAllSounds();
 		efectos->play2D("audio/smb_mariodie.wav", false);
 	}
-	else if (queCosa == "flag")efectos->play2D("audio/smb_stage_clear.wav", false); //que suene al final de la animación
+	else if (queCosa == "flag"){
+		mainMusic -> stopAllSounds(); 
+		efectos->play2D("audio/smb_stage_clear.wav", false);
+	}//que suene al final de la animación
 	else if (queCosa == "jump")efectos->play2D("audio/smb_jump-small.wav", false); 
+	else if (queCosa == "takeDmg")efectos->play2D("audio/smb_shrink.wav", false); 
 }
 
 void Game::imDead() {
