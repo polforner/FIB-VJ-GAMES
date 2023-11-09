@@ -33,33 +33,31 @@ public:
 	glm::ivec2 getPosition();
 	
 private:
-
-	void configureSmallSprite(ShaderProgram &shaderProgram);
-	void configureBigSprite(ShaderProgram &shaderProgram);
-	void configureSmallStarSprite(ShaderProgram &shaderProgram);
-	void configureBigStarSprite(ShaderProgram &shaderProgram);
 	void configureSprites(ShaderProgram &shaderProgram);
-
 	bool isBlockCollision(const int &dir);
 	bool isPickUpCollision(const int &dir);
 	bool isEnemyCollision(const int &dir);
+
 	void hit();
 
 	void selectSprite();
 
-
-	bool bJumping;
 	glm::ivec2 tileMapDispl, posPlayer, minCoords, size;
+	bool bJumping;
 	int jumpAngle, startY;
 	Texture spritesheet;
-	Sprite *sprite, *smallSprite, *bigSprite, *smallStarSprite, *bigStarSprite;
+	Sprite *sprite, *smallSprite, *bigSprite;
 	TileMap *map;
 	int state;
 	bool changeState;
+	bool isSwaping;
+	bool isStar;
 	bool inControl;
 	bool isEliminated;
-	double velocity;
+	bool isRunning;
 
+	int timer;
+	double velocity;
 
 	vector<Block*> blocks;
 	vector<PickUp*> pickUps;

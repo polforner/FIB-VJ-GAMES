@@ -1,7 +1,7 @@
 #include "Mushroom.h"
 
-#define SIZE_X 32
-#define SIZE_Y 32
+#define SIZE_X 64
+#define SIZE_Y 64
 
 enum States
 {
@@ -12,7 +12,7 @@ void Mushroom::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) 
     PickUp::init(tileMapPos, shaderProgram);
 
     spritesheet.loadFromFile("images/spritesItems.png", TEXTURE_PIXEL_FORMAT_RGBA);
-    sprite = Sprite::createSprite(glm::ivec2(32, 32), glm::vec2(0.5, 0.5), &spritesheet, &shaderProgram);
+    sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.5, 0.5), &spritesheet, &shaderProgram);
     sprite->setNumberAnimations(3);
 
     sprite->setAnimationSpeed(WAITING, 8);
@@ -79,6 +79,6 @@ bool Mushroom::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, in
 }
 
 void Mushroom::setPosition(const glm::vec2 &pos) {
-    position = glm::ivec2(pos.x + 16, pos.y + 32);
+    position = glm::ivec2(pos.x, pos.y);
     sprite->setPosition(glm::vec2(float(tileMapDispl.x + position.x), float(tileMapDispl.y + position.y)));
 }

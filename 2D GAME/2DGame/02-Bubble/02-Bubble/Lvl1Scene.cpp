@@ -10,6 +10,7 @@
 #include "Mushroom.h"
 #include "Star.h"
 #include "Goomba.h"
+#include "Koopa.h"
 
 #define SCREEN_X 0
 #define SCREEN_Y 0
@@ -35,6 +36,9 @@ Lvl1Scene::~Lvl1Scene()
 }
 
 void Lvl1Scene::prepareEntities() {
+	blocks = vector<Block*>();
+	pickUps = vector<PickUp*>();
+	enemies = vector<Enemy*>();	
 	glm::ivec2 size = entities->getMapSize();
 	int tileSize = entities->getTileSize();
 	for (int x = 0; x < size.x; ++x) {
@@ -50,6 +54,7 @@ void Lvl1Scene::prepareEntities() {
 			}
 			else if (tileTipe == 23) pickUp = new Coin();
 			else if (tileTipe == 24) enemy = new Goomba();
+			else if (tileTipe == 30) enemy = new Koopa();
 			
 			if(block) {
 				block -> init(glm::ivec2(SCREEN_X, SCREEN_Y), texProgram);
@@ -178,13 +183,13 @@ void Lvl1Scene::render()
 	for (int i = 0; i < numBlocks; ++i)
 		if (blocks[i] -> isEntityActive()) blocks[i] -> render();
 
-	int numPickUps = pickUps.size();
-	for (int i = 0; i < numPickUps; ++i)
-		if (pickUps[i] -> isEntityActive()) pickUps[i] -> render();
-
 	int numEnemies = enemies.size();
 	for (int i = 0; i < numEnemies; ++i)
 		if (enemies[i] -> isEntityActive()) enemies[i] -> render();
+
+	int numPickUps = pickUps.size();
+	for (int i = 0; i < numPickUps; ++i)
+		if (pickUps[i] -> isEntityActive()) pickUps[i] -> render();
 
 	player->render();
 }

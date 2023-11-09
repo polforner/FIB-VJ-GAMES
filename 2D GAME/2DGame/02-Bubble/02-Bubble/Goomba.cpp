@@ -1,6 +1,6 @@
 #include "Goomba.h"
 
-#define SIZE_X 64
+#define SIZE_X 60
 #define SIZE_Y 64
 
 #define GOOMBA_FALL_STEP 2
@@ -50,10 +50,11 @@ void Goomba::update(int deltaTime) {
             if (blocks[i] -> isEntityActive()) collision = blocks[i] -> collisionMoveDown(position, glm::ivec2(SIZE_X,SIZE_Y), &position.y);
             ++i;
         }
+        if (position.y + SIZE_Y >= ((map -> getMapSize()).y) * (map -> getTileSize())) isActive = false;
 
         if (sprite ->animation() == MOVING_LEFT) {
             position.x -= GOOMBA_VELOCITY;
-            bool collision = map->collisionMoveLeft(position, glm::ivec2(SIZE_X,SIZE_Y));
+            bool collision = map->collisionMoveLeft(position, glm::ivec2(SIZE_X,SIZE_Y), &position.x);
             while (!collision && i < blocks.size()) {
                 if (blocks[i] -> isEntityActive()) collision = blocks[i] -> collisionMoveLeft(position, glm::ivec2(SIZE_X,SIZE_Y));
                 ++i;

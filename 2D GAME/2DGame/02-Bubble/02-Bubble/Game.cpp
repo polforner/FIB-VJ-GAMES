@@ -2,6 +2,9 @@
 #include <GL/glut.h>
 #include "Game.h"
 #include "Lvl1Scene.h"
+#include "irrKlang.h"
+using namespace irrklang;
+#pragma comment(lib, "irrKlang.lib")
 
 enum Scenes {
 	MAIN, INSTR, LVL1, LVL2, CREDS, COUNT
@@ -14,8 +17,6 @@ void Game::init()
 	curScene = LVL1;
 	scenes[curScene] = new Lvl1Scene();
 	scenes[curScene] -> init();
-	
-	
 }
 
 bool Game::update(int deltaTime)
@@ -38,7 +39,7 @@ void Game::keyPressed(int key)
 	if (key == 'l'){
 		if((curScene != INSTR) && (curScene != CREDS)){
 			curScene = LVL1;
-			scenes[curScene] ->init();
+			scenes[curScene] -> init();
 		}
 	}
 	if (key == 'p') {

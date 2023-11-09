@@ -15,7 +15,9 @@
         "tuple": "cpp",
         "utility": "cpp",
         "xstddef": "cpp",
-        "xtr1common": "cpp"
+        "xtr1common": "cpp",
+        "algorithm": "cpp",
+        "limits": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

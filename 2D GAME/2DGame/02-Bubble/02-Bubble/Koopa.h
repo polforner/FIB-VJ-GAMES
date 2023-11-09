@@ -2,27 +2,24 @@
 #ifndef _KOOPA_INCLUDE
 #define _KOOPA_INCLUDE
 
-
 #include "Sprite.h"
 #include "TileMap.h"
+#include "Enemy.h"
 
-
-// KOOPA is a class which represents the KOOPA enemy. 
-// all properties it needs to track its movement, jumping, and collisions.
-/*
-
-class Koopa : public Enemy
-{
+class Koopa : public Enemy {
 
 public:
+    void init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) override;
+    void update(int deltaTime) override;
 
+	bool collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) override;
+	bool collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) override;
+	bool collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) override;
+	bool collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) override;
 
+	void hit();
 
 private:
-	bool isShell;
-	int direction;
+	int deadTime;
 };
-
-*/
-
-#endif // _KOOPA_INCLUDE#pragma once
+#endif

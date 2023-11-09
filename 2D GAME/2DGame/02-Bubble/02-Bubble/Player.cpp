@@ -9,10 +9,12 @@
 #define JUMP_ANGLE_STEP 4
 #define JUMP_HEIGHT 300
 #define FALL_STEP 16
-#define ACCELERATION 0.01
-#define DESACCELERATION 0.05
-#define INI_VELOCITY 0.0
-#define MAX_VELOCITY 8.0
+
+#define ACCELERATION 0.005
+#define DECELERATION 0.1
+
+#define INI_VELOCITY 2.0
+#define MAX_VELOCITY 5.0
 
 
 #define SIZE_X 56
@@ -47,15 +49,17 @@ enum PlayerAnims
 {
 	STAND_LEFT, STAND_RIGHT, MOVE_LEFT, MOVE_RIGHT, GRAB_FLAG, ELIMINATE, JUMP_RIGHT, JUMP_LEFT
 };
+
 enum State {
-	SMALL, BIG, SMALL_STAR, BIG_STAR
+	SMALL, BIG,
 };
+
 enum Dir {
 	LEFT, RIGHT, DOWN, UP
 };
 
-void Player::configureSmallSprite(ShaderProgram &shaderProgram) {
-	spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+void Player::configureSprites(ShaderProgram &shaderProgram) {
+	//Configure SMALL
 	smallSprite = Sprite::createSprite(glm::ivec2(64,64), glm::vec2(0.125, 0.125), &spritesheet, &shaderProgram);
 	smallSprite->setNumberAnimations(8);
 	
@@ -88,12 +92,8 @@ void Player::configureSmallSprite(ShaderProgram &shaderProgram) {
 
 	smallSprite->setAnimationSpeed(GRAB_FLAG, 8);
 	smallSprite->addKeyframe(GRAB_FLAG, glm::vec2(0.f, 0.875f));
-		
-	smallSprite->changeAnimation(STAND_RIGHT);
-}
 
-void Player::configureBigSprite(ShaderProgram &shaderProgram) {
-	spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+	//Configure BIG
 	bigSprite = Sprite::createSprite(glm::ivec2(64,128), glm::vec2(0.125, 0.25), &spritesheet, &shaderProgram);
 	bigSprite->setNumberAnimations(8);
 	
@@ -126,85 +126,7 @@ void Player::configureBigSprite(ShaderProgram &shaderProgram) {
 
 	bigSprite->setAnimationSpeed(GRAB_FLAG, 8);
 	bigSprite->addKeyframe(GRAB_FLAG, glm::vec2(0.375f, 0.25f));
-		
-	bigSprite->changeAnimation(STAND_RIGHT);
 }
-
-void Player::configureSmallStarSprite(ShaderProgram &shaderProgram) {
-	spritesheet.loadFromFile("images/spriteStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	smallStarSprite = Sprite::createSprite(glm::ivec2(64,64), glm::vec2(0.125, 0.125), &spritesheet, &shaderProgram);
-	smallStarSprite->setNumberAnimations(8);
-	
-	smallStarSprite->setAnimationSpeed(STAND_LEFT, 8);
-	smallStarSprite->addKeyframe(STAND_LEFT, glm::vec2(0.125f, 0.f));
-		
-	smallStarSprite->setAnimationSpeed(STAND_RIGHT, 8);
-	smallStarSprite->addKeyframe(STAND_RIGHT, glm::vec2(0.f, 0.f));
-		
-	smallStarSprite->setAnimationSpeed(MOVE_LEFT, 8);
-	smallStarSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.f));
-	smallStarSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.125f));
-	smallStarSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.25f));
-	smallStarSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.125f, 0.375f));
-		
-	smallStarSprite->setAnimationSpeed(MOVE_RIGHT, 8);
-	smallStarSprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.f));
-	smallStarSprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.125f));
-	smallStarSprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.25f));
-	smallStarSprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.f, 0.375f));
-
-	smallStarSprite->setAnimationSpeed(ELIMINATE, 8);
-	smallStarSprite->addKeyframe(ELIMINATE, glm::vec2(0.f, 0.750f));
-
-	smallStarSprite->setAnimationSpeed(JUMP_RIGHT, 8); 
-	smallStarSprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.f, 0.5f)); 
-
-	smallStarSprite->setAnimationSpeed(JUMP_LEFT, 8);
-	smallStarSprite->addKeyframe(JUMP_LEFT, glm::vec2(0.125f, 0.5f)); 
-
-	smallStarSprite->setAnimationSpeed(GRAB_FLAG, 8);
-	smallStarSprite->addKeyframe(GRAB_FLAG, glm::vec2(0.f, 0.875f));
-		
-	smallStarSprite->changeAnimation(STAND_RIGHT);
-}
-
-void Player::configureBigStarSprite(ShaderProgram &shaderProgram) {
-	spritesheet.loadFromFile("images/spriteStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-	bigStarSprite = Sprite::createSprite(glm::ivec2(64,128), glm::vec2(0.125, 0.25), &spritesheet, &shaderProgram);
-	bigStarSprite->setNumberAnimations(8);
-	
-	bigStarSprite->setAnimationSpeed(STAND_LEFT, 8);
-	bigStarSprite->addKeyframe(STAND_LEFT, glm::vec2(0.625f, 0.f));
-		
-	bigStarSprite->setAnimationSpeed(STAND_RIGHT, 8);
-	bigStarSprite->addKeyframe(STAND_RIGHT, glm::vec2(0.25f, 0.f));
-		
-	bigStarSprite->setAnimationSpeed(MOVE_LEFT, 8);
-	bigStarSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.625f, 0.f));
-	bigStarSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.625f, 0.25f));
-	bigStarSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.625f, 0.5f));
-	bigStarSprite->addKeyframe(MOVE_LEFT, glm::vec2(0.625f, 0.75f));
-		
-	bigStarSprite->setAnimationSpeed(MOVE_RIGHT, 8);
-	bigStarSprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.f));
-	bigStarSprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.25f));
-	bigStarSprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.5f));
-	bigStarSprite->addKeyframe(MOVE_RIGHT, glm::vec2(0.25f, 0.75f));
-
-	bigStarSprite->setAnimationSpeed(ELIMINATE, 8);
-	bigStarSprite->addKeyframe(ELIMINATE, glm::vec2(0.f, 0.750f));
-
-	bigStarSprite->setAnimationSpeed(JUMP_RIGHT, 8); 
-	bigStarSprite->addKeyframe(JUMP_RIGHT, glm::vec2(0.375f, 0.f)); 
-
-	bigStarSprite->setAnimationSpeed(JUMP_LEFT, 8);
-	bigStarSprite->addKeyframe(JUMP_LEFT, glm::vec2(0.5f, 0.f)); 
-
-	bigStarSprite->setAnimationSpeed(GRAB_FLAG, 8);
-	bigStarSprite->addKeyframe(GRAB_FLAG, glm::vec2(0.375f, 0.25f));
-		
-	bigStarSprite->changeAnimation(STAND_RIGHT);
-}	
 
 bool Player::isBlockCollision(const int &dir) {
 	int i = 0;
@@ -224,7 +146,7 @@ bool Player::isBlockCollision(const int &dir) {
 				collision = blocks[i] -> collisionMoveUp(constPosition, size, &posPlayer.y);
 			
 			if (dir == UP && collision) {
-				if (state == SMALL) blocks[i] -> hit();
+				if (!isStar && state == SMALL) blocks[i] -> hit();
 				else blocks[i] -> destroy();
 			}
 			if (collision) someCollision = true;
@@ -258,18 +180,22 @@ bool Player::isPickUpCollision(const int &dir) {
 				else if (effect == 2) {
 					if (state == SMALL) {
 						state = BIG;
+						isSwaping = true;
+						if(!isStar) timer = 0;
 						changeState = true;
 					}
 					else score += 1000;
 				}
 				else if (effect == 3) {
 					if (state == SMALL) {
-						state = SMALL_STAR;
+						isStar = true;
 						changeState = true;
+						timer = 0;
 					}
 					else if (state == BIG) {
-						state = BIG_STAR;
+						isStar = true;
 						changeState = true;
+						timer = 0;
 					}
 					else score += 1000;
 				}
@@ -298,9 +224,9 @@ bool Player::isEnemyCollision(const int &dir) {
 				collision = enemies[i] -> collisionMoveUp(constPosition, size, &posPlayer.y);
 			
 			if (collision) {
-				if (dir == DOWN) enemies[i] -> hit();
+				if (isStar || dir == DOWN) enemies[i] -> hit();
 				else {
-					hit();
+					if(!isSwaping) hit();
 					collision = false;
 				}
 			}
@@ -312,149 +238,121 @@ bool Player::isEnemyCollision(const int &dir) {
 }
 
 void Player::hit() {
-	isEliminated = true;
-}
-
-void Player::configureSprites(ShaderProgram &shaderProgram) {
-	configureSmallSprite(shaderProgram);
-	configureBigSprite(shaderProgram);
-	configureSmallStarSprite(shaderProgram);
-	configureBigStarSprite(shaderProgram);
+	if (state == BIG) {
+		state = SMALL;
+		isSwaping = true;
+		timer = 0;
+		changeState = true;
+	}
+	else if (state == SMALL) isEliminated = true;
 }
 
 void Player::selectSprite() {
 	glm::ivec2 lastSize = size;
 	int lastAnimation = sprite -> animation();
+	//check states
 	if (state == SMALL) {
 		spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		size = glm::ivec2(64,64);
+		size = glm::ivec2(56,64);
 		sprite = smallSprite;
 	}
 	else if (state == BIG) {
 		spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		size = glm::ivec2(64,128);
+		size = glm::ivec2(63,128);
 		sprite = bigSprite;
 	}
-	else if (state == SMALL_STAR) {
+	//check status
+	if (isStar) {
 		spritesheet.loadFromFile("images/spriteStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		size = glm::ivec2(64,64);
-		sprite = smallStarSprite;
 	}
-	else if (state == BIG_STAR) {
-		spritesheet.loadFromFile("images/spriteStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
-		size = glm::ivec2(64,128);
-		sprite = bigStarSprite;
+	if (isSwaping) {
+		if (timer % 500 < 250) {
+				spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+				size = glm::ivec2(56,64);
+				sprite = smallSprite;
+		} 
+		else {
+				spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
+				size = glm::ivec2(63,128);
+				sprite = bigSprite;
+		}
 	}
+
 	sprite->changeAnimation(lastAnimation);
 	setPosition(posPlayer + (lastSize - size));
 }
 
 void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 {
-	inControl = true; 
-	state = SMALL;
-	changeState = false;
+	inControl = true;
+	isSwaping = false;
+	isStar = false;
 	bJumping = false;
-	velocity = INI_VELOCITY;
+	changeState = false;
+	isRunning = false;
 	configureSprites(shaderProgram);
+	
+	state = SMALL;
+	spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	sprite = smallSprite;
-	selectSprite();
+	sprite -> changeAnimation(STAND_RIGHT);
+	size = glm::ivec2(56,64);
+	
+	velocity = INI_VELOCITY;
 	tileMapDispl = tileMapPos;
 }
 
 void Player::update(int deltaTime)
 {
+	sprite->update(deltaTime);
+	timer += deltaTime;
+
 	if(Game::instance().getKey('m')) {
 		changeState = true;
+		timer = 0;
+		isSwaping = true;
 		state = BIG;
 	}
-	sprite->update(deltaTime);
-	if (sprite -> animation() == ELIMINATE){
-		jumpAngle += 2;
-		if(jumpAngle >= 180) posPlayer.y += FALL_STEP;
-		else posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+	if(Game::instance().getKey('g')) {
+		changeState = true;
+		timer = 0;
+		isStar = true;
 	}
-	else {
-		if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)/* and (inControl)*/) {
-			if(sprite->animation() != MOVE_LEFT) {
-				sprite->changeAnimation(MOVE_LEFT);
-				velocity = INI_VELOCITY;
-			}
-			velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
-			posPlayer.x -= int(velocity);
+	if(Game::instance().getKey('q')) {
+		isRunning = !isRunning;
+	}
+	
 
-			isPickUpCollision(LEFT);
-			bool collision = isBlockCollision(LEFT);
-			if(posPlayer.x < minCoords.x || collision || map->collisionMoveLeft(posPlayer, size))
-			{
-				posPlayer.x += int(velocity);
-				velocity = INI_VELOCITY;
-				sprite->changeAnimation(STAND_LEFT);
-			}
-
-		}
-		else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT) /* and inControl */)
-		{
-			if(sprite->animation() != MOVE_RIGHT){
-				sprite->changeAnimation(MOVE_RIGHT);
-				velocity = INI_VELOCITY;
-			}
-
-			velocity = glm::min(velocity + ACCELERATION * deltaTime, MAX_VELOCITY);
-			posPlayer.x += int(velocity);
-			isPickUpCollision(RIGHT);
-			bool collision = isBlockCollision(RIGHT);
-			if(collision || map->collisionMoveRight(posPlayer, size, &posPlayer.x))
-			{
-				velocity = INI_VELOCITY;
-				sprite->changeAnimation(STAND_RIGHT);
-			}
-		}
-		else
-		{
-			velocity = glm::max(velocity - DESACCELERATION * deltaTime, INI_VELOCITY);
-			if(sprite->animation() == MOVE_LEFT)
-				sprite->changeAnimation(STAND_LEFT);
-			else if(sprite->animation() == MOVE_RIGHT)
-				sprite->changeAnimation(STAND_RIGHT);
-		}
+if(inControl) {
 		if(bJumping)
 		{
 			jumpAngle += JUMP_ANGLE_STEP;
-			if(jumpAngle == 180)
+
+			posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+			if(jumpAngle > 90) {
+				bJumping = !isBlockCollision(DOWN) && !map->collisionMoveDown(posPlayer, size, &posPlayer.y);
+				if (isEnemyCollision(DOWN)) {
+					bJumping = true;
+					jumpAngle = 0;
+					startY = posPlayer.y;
+				}
+			} else {
+				isPickUpCollision(UP);
+				if (isBlockCollision(UP) || map -> collisionMoveUp(posPlayer, size, &posPlayer.y)) {
+					bJumping = false;
+				}
+			}
+			if(jumpAngle >= 180)
 			{
 				bJumping = false;
 				posPlayer.y = startY;
-			}
-			else
-			{
-				posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-				if(jumpAngle > 90) {
-					isPickUpCollision(DOWN);
-					bool collision = isBlockCollision(DOWN);
-					bJumping = !collision && !map->collisionMoveDown(posPlayer, size, &posPlayer.y);
-					collision = isEnemyCollision(DOWN);
-					if (collision) {
-						bJumping = true;
-						jumpAngle = 0;
-						startY = posPlayer.y;
-					}
-				} else {
-					isPickUpCollision(UP);
-					bool collision = isBlockCollision(UP);
-					if (collision || map -> collisionMoveUp(posPlayer, size, &posPlayer.y)) {
-						bJumping = false;
-					}
-				}
 			}
 		}
 		else
 		{
 			posPlayer.y += FALL_STEP;
-			isPickUpCollision(DOWN);
-			bool collision = isBlockCollision(DOWN);
 			
-			if(collision || map->collisionMoveDown(posPlayer, size, &posPlayer.y))
+			if(isBlockCollision(DOWN) || map->collisionMoveDown(posPlayer, size, &posPlayer.y))
 			{
 				if(Game::instance().getSpecialKey(GLUT_KEY_UP))
 				{
@@ -462,25 +360,95 @@ void Player::update(int deltaTime)
 					jumpAngle = 0;
 					startY = posPlayer.y;
 				}
-			} else if (collision = isEnemyCollision(DOWN)) {
+			} else if (isEnemyCollision(DOWN)) {
 					bJumping = true;
 					jumpAngle = 0;
 					startY = posPlayer.y;			
 			}
+			
+			if (posPlayer.y + size.y >= ((map -> getMapSize()).y) * (map -> getTileSize())) isEliminated = true;
 		}
-		isEnemyCollision(RIGHT);
+
+		if(Game::instance().getSpecialKey(GLUT_KEY_LEFT)) {
+			if(sprite->animation() != MOVE_LEFT) {
+				sprite->changeAnimation(MOVE_LEFT);
+				velocity = -INI_VELOCITY;
+			}
+			if (isRunning) velocity = glm::max(-MAX_VELOCITY, velocity - ACCELERATION * deltaTime);
+			else velocity = glm::min(-INI_VELOCITY, velocity + DECELERATION * deltaTime);
+			
+			posPlayer.x += int(velocity);
+
+			if(posPlayer.x < minCoords.x || isBlockCollision(LEFT) 
+			|| isEnemyCollision(LEFT) || map->collisionMoveLeft(posPlayer, size, &posPlayer.x)) {
+				velocity = -INI_VELOCITY;
+				sprite->changeAnimation(STAND_LEFT);
+			}
+		}
+		else if(Game::instance().getSpecialKey(GLUT_KEY_RIGHT)) {
+			if(sprite->animation() != MOVE_RIGHT){
+				sprite->changeAnimation(MOVE_RIGHT);
+				velocity = INI_VELOCITY;
+			}
+			if (isRunning) velocity = glm::min(MAX_VELOCITY, velocity + ACCELERATION * deltaTime);
+			else velocity = glm::max(INI_VELOCITY, velocity - DECELERATION * deltaTime);
+			
+			posPlayer.x += int(velocity);
+
+			if((posPlayer.x > ((map -> getMapSize()).x * map -> getTileSize())) || isBlockCollision(RIGHT) 
+			|| isEnemyCollision(RIGHT) || map->collisionMoveRight(posPlayer, size, &posPlayer.x))
+			{
+				velocity = INI_VELOCITY;
+				sprite->changeAnimation(STAND_RIGHT);
+			}
+		}
+		else
+		{
+			//velocity = glm::max(velocity - DESACCELERATION * deltaTime, INI_VELOCITY);
+			if(sprite->animation() == MOVE_LEFT) sprite->changeAnimation(STAND_LEFT);
+			else if(sprite->animation() == MOVE_RIGHT) sprite->changeAnimation(STAND_RIGHT);
+
+			if (sprite -> animation() == LEFT) isEnemyCollision(LEFT);
+			else isEnemyCollision(RIGHT);
+		}
+		isPickUpCollision(DOWN);
+	}
+
+	if (sprite -> animation() == ELIMINATE){
+		jumpAngle += 2;
+		if(jumpAngle >= 180) posPlayer.y += FALL_STEP;
+		else posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
+		if (timer > 5000) {
+
+		}
+	}
+	else {
 		if (isEliminated) {
-			inControl = false; 
+			inControl = false;
+			isSwaping = false;
+			isStar = false;
+			state = SMALL;
+			changeState = true;
 			sprite->changeAnimation(ELIMINATE); 
 			jumpAngle = 0;
 			startY = posPlayer.y;
+			timer = 0;
 			isEliminated = false;
+		}
+		if (isSwaping) {
+			isSwaping = !(timer > 2000);
+			changeState = true;
+		}
+		if (isStar) {
+			isStar= !(timer > 10000);
+			if(!isStar) changeState = true;
 		}
 		if (changeState) {
 			selectSprite();
 			changeState = false;
 		}
 	}
+
 	sprite->setPosition(glm::vec2(float(tileMapDispl.x + posPlayer.x), float(tileMapDispl.y + posPlayer.y)));
 }
 

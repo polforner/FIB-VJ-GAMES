@@ -152,9 +152,8 @@ void TileMap::prepareArrays(const glm::vec2 &minCoords, ShaderProgram &program)
 	texCoordLocation = program.bindVertexAttribute("texCoord", 2, 4*sizeof(float), (void *)(2*sizeof(float)));
 }
 
-bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) const
+bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) const
 {
-	if (NOCOLISION) return false;
 	int x, y0, y1;
 	
 	x = pos.x / tileSize;
@@ -162,8 +161,13 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 	y1 = (pos.y + size.y - 1) / tileSize;
 	for(int y=y0; y<=y1; y++)
 	{
-		if(map[y*mapSize.x+x] != COLISIONINDEX)
+		if(map[y*mapSize.x+x] != COLISIONINDEX) {
+			if((*posX + size.x) - tileSize * x  >= 0)
+			{
+				*posX = tileSize * x + size.x;
 				return true;
+			}
+		}
 	}
 	
 	return false;
@@ -171,7 +175,6 @@ bool TileMap::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) c
 
 bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) const
 {
-	if (NOCOLISION) return false;
 	int x, y0, y1;
 	
 	x = (pos.x + size.x - 1) / tileSize;
@@ -181,7 +184,7 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, 
 	{
 		if(map[y*mapSize.x+x] != COLISIONINDEX)			
 		{
-			if(*posX - tileSize * x + size.x <= 8) // preguntar porque con 8 falla pero asi va ???
+			if((*posX + size.x) - tileSize * x  <= 8)
 			{
 				*posX = tileSize * x - size.x;
 				return true;
@@ -194,7 +197,6 @@ bool TileMap::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, 
 
 bool TileMap::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) const
 {
-	//if (NOCOLISION) return false;
 	int x0, x1, y;
 	
 	x0 = pos.x / tileSize;
