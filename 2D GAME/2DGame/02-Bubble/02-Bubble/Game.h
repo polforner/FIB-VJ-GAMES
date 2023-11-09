@@ -4,8 +4,8 @@
 
 #include "Scene.h"
 #include <vector>
-#include <irrKlang.h>
-using namespace irrklang;
+//#include <irrKlang.h>
+//using namespace irrklang;
 
 
 #define SCREEN_WIDTH 640
