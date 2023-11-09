@@ -14,6 +14,17 @@ void Game::init()
 	curScene = LVL1;
 	scenes[curScene] = new Lvl1Scene();
 	scenes[curScene] -> init();
+	/*
+ 	curScene = INSTR; 
+  	scenes[curScene] = new SceneInstr(); 
+   	curScene = CREDS; 
+    	scenes[curScene] = new SceneCreds(); 
+ 	curScene = LVL2;
+  	scenes[curScene] = new Lvl2Scene(); 
+   	curScene = MAIN;
+	scenes[curScene] = new SceneMain();
+	scenes[curScene] -> init();
+ 	*/
 	//mainMusic = createIrrKlangDevice();
 	//efectos = createIrrKlangDevice();
 	//mainMusic->play2D("/audio/getout.ogg", true);
@@ -48,22 +59,26 @@ void Game::keyPressed(int key)
 		if (curScene == MAIN) {
 
 			curScene = INSTR;
+			//scenes[curScene] -> init(); 
 		}
 		else if (curScene == LVL1) {
 
 			curScene = LVL2;
+			//scenes[curScene] -> init(); 
 		}
 	}
 	if (key == 'b') {
 		if ((curScene == INSTR) || (curScene == CREDS)) {
 
 			curScene = MAIN;
+			//scenes[curScene] -> init(); 
 		}
 	}
 	if (key == 3) {
 		if ((curScene != LVL1) && (curScene != LVL2)) {
 
 			curScene = CREDS;
+			//scenes[curScene] -> init(); 
 		}
 	}
 	keys[key] = true;
