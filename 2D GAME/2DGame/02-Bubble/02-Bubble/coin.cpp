@@ -6,6 +6,7 @@
 #define COIN_JUMP_ANGLE_STEP 8
 #define COIN_JUMP_HEIGHT 256
 
+
 enum States
 {
 	NORMAL, PICKED
