@@ -43,6 +43,8 @@ public:
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
 
+	//void playMusic(string queCosa);
+
 private:
 	bool bPlay;                       // Continue to play game?
 	vector<Scene*> scenes;
@@ -50,6 +52,8 @@ private:
 	bool keys[256], specialKeys[256]; // Store key states so that 
 									  // we can have access at any time
 	int curScene;
+	//ISoundEngine* mainMusic;
+	//ISoundEngine* efectos;
 
 };
 
