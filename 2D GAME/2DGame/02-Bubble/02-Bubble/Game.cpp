@@ -17,6 +17,22 @@ void Game::init()
 	curScene = LVL1;
 	scenes[curScene] = new Lvl1Scene();
 	scenes[curScene] -> init();
+	/*
+ 	curScene = INSTR; 
+  	scenes[curScene] = new SceneInstr(); 
+   	curScene = CREDS; 
+    	scenes[curScene] = new SceneCreds(); 
+ 	curScene = LVL2;
+  	scenes[curScene] = new Lvl2Scene(); 
+   	curScene = MAIN;
+	scenes[curScene] = new SceneMain();
+	scenes[curScene] -> init();
+ 	*/
+	//mainMusic = createIrrKlangDevice();
+	//efectos = createIrrKlangDevice();
+	//mainMusic->play2D("/audio/getout.ogg", true);
+	
+	
 }
 
 bool Game::update(int deltaTime)
@@ -46,22 +62,26 @@ void Game::keyPressed(int key)
 		if (curScene == MAIN) {
 
 			curScene = INSTR;
+			//scenes[curScene] -> init(); 
 		}
 		else if (curScene == LVL1) {
 
 			curScene = LVL2;
+			//scenes[curScene] -> init(); 
 		}
 	}
 	if (key == 'b') {
 		if ((curScene == INSTR) || (curScene == CREDS)) {
 
 			curScene = MAIN;
+			//scenes[curScene] -> init(); 
 		}
 	}
 	if (key == 3) {
 		if ((curScene != LVL1) && (curScene != LVL2)) {
 
 			curScene = CREDS;
+			//scenes[curScene] -> init(); 
 		}
 	}
 	keys[key] = true;
@@ -103,3 +123,15 @@ bool Game::getSpecialKey(int key) const
 {
 	return specialKeys[key];
 }
+
+/*
+void Game::playMusic(string queCosa){
+	if (queCosa == "goombaDie")efectos->play2D("../../audio/smb_stomp.wav", false);
+	if (queCosa == "brickHit")efectos->play2D("../../audio/smb_bump.wav", false);
+	if (queCosa == "brickDestroy")efectos->play2D("../../audio/smb_breakblock.wav", false);
+	if (queCosa == "shroom")efectos->play2D("../../audio/smb_powerup.wav", false);
+	if (queCosa == "die")efectos->play2D("../../audio/smb_mariodie.wav", false);
+	if (queCosa == "flag")efectos->play2D("../../audio/smb_stage_clear.wav", false); //que suene al final de la animación
+	if (queCosa == "jump")efectos->play2d("../../audio/jump-small.wav", false); 
+
+*/
