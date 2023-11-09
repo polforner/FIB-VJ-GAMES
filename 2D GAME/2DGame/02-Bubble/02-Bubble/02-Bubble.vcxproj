@@ -21,17 +21,21 @@
     <ClInclude Include="Goomba.h" />
     <ClInclude Include="Koopa.h" />
     <ClInclude Include="Lvl1Scene.h" />
+    <ClInclude Include="Lvl2Scene.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="PickUp.h" />
     <ClInclude Include="Piranha.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Quad.h" />
     <ClInclude Include="questionMark.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Sprite.h" />
     <ClInclude Include="Star.h" />
+    <ClInclude Include="Text.h" />
     <ClInclude Include="Texture.h" />
+    <ClInclude Include="TexturedQuad.h" />
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>
@@ -44,18 +48,22 @@
     <ClCompile Include="Goomba.cpp" />
     <ClCompile Include="Koopa.cpp" />
     <ClCompile Include="Lvl1Scene.cpp" />
+    <ClCompile Include="Lvl2Scene.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="PickUp.cpp" />
     <ClCompile Include="Piranha.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Quad.cpp" />
     <ClCompile Include="questionMark.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Sprite.cpp" />
     <ClCompile Include="Star.cpp" />
+    <ClCompile Include="Text.cpp" />
     <ClCompile Include="Texture.cpp" />
+    <ClCompile Include="TexturedQuad.cpp" />
     <ClCompile Include="TileMap.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -99,14 +107,14 @@
       </PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <AdditionalIncludeDirectories>..\..\..\libs\Simple OpenGL Image Library\src;..\..\..\libs\freeglut\include;..\..\..\libs\glew-1.13.0\include;..\..\..\libs\glm;..\..\..\libs\freetype-2.3.5-1-bin\include;..\..\..\libs\freetype-2.3.5-1-bin\include\freetype2;..\..\..\libs\irrklang\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;_IRR_STATIC_LIB_;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\..\libs\Simple OpenGL Image Library\src;..\..\..\libs\freeglut\include;..\..\..\libs\glew-1.13.0\include;..\..\..\libs\glm;..\..\..\libs\irrKlang-1.6.0\include;..\..\..\libs\freetype-2.3.5-1-bin\include\freetype2;..\..\..\libs\freetype-2.3.5-1-bin\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\libs\Simple OpenGL Image Library\projects\VC9\Debug;..\..\..\libs\freeglut\lib;..\..\..\libs\glew-1.13.0\lib\Release\Win32;..\..\..\libs\irrklang\lib\Winx64-visualStudio;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SOIL.lib;glew32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>..\..\..\libs\Simple OpenGL Image Library\projects\VC9\Debug;..\..\..\libs\freeglut\lib;..\..\..\libs\glew-1.13.0\lib\Release\Win32;..\..\..\libs\irrKlang-1.6.0\lib\Win32-visualStudio;..\..\..\libs\freetype-2.3.5-1-bin\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>SOIL.lib;glew32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

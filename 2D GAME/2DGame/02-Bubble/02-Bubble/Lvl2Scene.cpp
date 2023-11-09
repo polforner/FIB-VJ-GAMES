@@ -14,7 +14,7 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 0
+#define INIT_PLAYER_X_TILES 1
 #define INIT_PLAYER_Y_TILES 12
 
 #define CAMERA_VELOCITY 2
@@ -35,6 +35,9 @@ Lvl2Scene::~Lvl2Scene()
 }
 
 void Lvl2Scene::prepareEntities() {
+	blocks = vector<Block*>();
+	pickUps = vector<PickUp*>();
+	enemies = vector<Enemy*>();	
 	glm::ivec2 size = entities->getMapSize();
 	int tileSize = entities->getTileSize();
 	for (int x = 0; x < size.x; ++x) {

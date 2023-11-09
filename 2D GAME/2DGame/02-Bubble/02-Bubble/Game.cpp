@@ -2,6 +2,7 @@
 #include <GL/glut.h>
 #include "Game.h"
 #include "Lvl1Scene.h"
+#include "Lvl2Scene.h"
 #include "irrKlang.h"
 using namespace irrklang;
 #pragma comment(lib, "irrKlang.lib")
@@ -14,21 +15,24 @@ void Game::init()
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	scenes = vector<Scene*> (COUNT);
+ 	curScene = LVL2;
+  	scenes[curScene] = new Lvl2Scene();
+	scenes[curScene] -> init();
 	curScene = LVL1;
 	scenes[curScene] = new Lvl1Scene();
 	scenes[curScene] -> init();
+
 	/*
  	curScene = INSTR; 
   	scenes[curScene] = new SceneInstr(); 
    	curScene = CREDS; 
     	scenes[curScene] = new SceneCreds(); 
- 	curScene = LVL2;
-  	scenes[curScene] = new Lvl2Scene(); 
+
    	curScene = MAIN;
 	scenes[curScene] = new SceneMain();
 	scenes[curScene] -> init();
  	*/
-	//mainMusic = createIrrKlangDevice();
+	mainMusic = createIrrKlangDevice();
 	//efectos = createIrrKlangDevice();
 	//mainMusic->play2D("/audio/getout.ogg", true);
 	
@@ -56,18 +60,19 @@ void Game::keyPressed(int key)
 		if((curScene != INSTR) && (curScene != CREDS)){
 			curScene = LVL1;
 			scenes[curScene] -> init();
+			mainMusic->play2D("audio/lv1music.wav", true);
 		}
 	}
 	if (key == 'p') {
 		if (curScene == MAIN) {
 
 			curScene = INSTR;
-			//scenes[curScene] -> init(); 
+			scenes[curScene] -> init(); 
 		}
 		else if (curScene == LVL1) {
 
 			curScene = LVL2;
-			//scenes[curScene] -> init(); 
+			scenes[curScene] -> init(); 
 		}
 	}
 	if (key == 'b') {
