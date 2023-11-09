@@ -14,7 +14,7 @@
 #include "PickUp.h"
 #include "Enemy.h"
 
-class Lvl2Scene : public Scene
+class sceneMain : public Scene
 {
 
 public:
