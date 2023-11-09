@@ -19,8 +19,10 @@ void Game::init()
 	scenes = vector<Scene*> (COUNT);
  	curScene = LVL2;
   	scenes[curScene] = new Lvl2Scene();
+	scenes[curScene] -> init();
 	curScene = LVL1;
 	scenes[curScene] = new Lvl1Scene();
+	scenes[curScene] -> init();
 
 	/*
  	curScene = INSTR; 
@@ -36,13 +38,17 @@ void Game::init()
 	mainMusic = createIrrKlangDevice();
 	efectos = createIrrKlangDevice();
 	
-	//mainMusic->play2D("/audio/getout.ogg", true);
-	
+
+	coins = 0;
+	points = 0;
+	lives = 3;
+	remainingTime = 120;
 	
 }
 
 bool Game::update(int deltaTime)
 {
+	remainingTime -= deltaTime / 1000.f;
 	scenes[curScene] -> update(deltaTime);
 
 	return bPlay;
@@ -55,7 +61,7 @@ void Game::render()
 		scenes[curScene] -> init(); 
 		changeScene = false;
 		mainMusic -> play2D(backgroundMusics[curScene], true);
-	}	
+	}
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scenes[curScene] -> render();
 }
@@ -150,3 +156,9 @@ void Game::playMusic(string queCosa) {
 	else if (queCosa == "jump")efectos->play2D("audio/smb_jump-small.wav", false); 
 }
 
+void Game::imDead() {
+	lives -= 1;
+	remainingTime = 120;
+	if (lives < 0) curScene = CREDS;
+	changeScene = true;
+}

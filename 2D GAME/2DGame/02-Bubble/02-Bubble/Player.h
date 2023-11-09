@@ -31,7 +31,6 @@ public:
 	void setEnemies(const vector<Enemy*> &e) {enemies = e;};
 
 	glm::ivec2 getPosition();
-	int getCoins() {return coins;};
 	
 private:
 	void configureSprites(ShaderProgram &shaderProgram);
@@ -63,7 +62,6 @@ private:
 	vector<Block*> blocks;
 	vector<PickUp*> pickUps;
 	vector<Enemy*> enemies;
-	int coins, score;
 };
 
 

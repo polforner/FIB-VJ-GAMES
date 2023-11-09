@@ -174,8 +174,7 @@ bool Player::isPickUpCollision(const int &dir) {
 			if (collision) {
 				int effect = pickUps[i] -> pick();
 				if (effect == 1) {
-					++coins;
-					score += 100;
+					Game::instance().addCoin();
 				}
 				else if (effect == 2) {
 					if (state == SMALL) {
@@ -184,7 +183,7 @@ bool Player::isPickUpCollision(const int &dir) {
 						if(!isStar) timer = 0;
 						changeState = true;
 					}
-					else score += 1000;
+					else Game::instance().addPoints();
 				}
 				else if (effect == 3) {
 					if (state == SMALL) {
@@ -197,7 +196,7 @@ bool Player::isPickUpCollision(const int &dir) {
 						changeState = true;
 						timer = 0;
 					}
-					else score += 1000;
+					else Game::instance().addPoints();
 				}
 			}
 		}
@@ -306,7 +305,7 @@ void Player::update(int deltaTime)
 {
 	sprite->update(deltaTime);
 	timer += deltaTime;
-
+	
 	if(!isSwaping && Game::instance().getKey('m')) {
 		changeState = true;
 		timer = 0;
@@ -321,7 +320,7 @@ void Player::update(int deltaTime)
 	if(Game::instance().getKey('q')) {
 		isRunning = !isRunning;
 	}
-	
+	if (Game::instance().getRemainingTime() == 0) isEliminated = true;
 
 if(inControl) {
 		if(bJumping)
@@ -419,9 +418,7 @@ if(inControl) {
 		jumpAngle += 2;
 		if(jumpAngle >= 180) posPlayer.y += FALL_STEP;
 		else posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
-		if (timer > 5000) {
-
-		}
+		if (timer > 5000) Game::instance().imDead();
 	}
 	else {
 		if (isEliminated) {

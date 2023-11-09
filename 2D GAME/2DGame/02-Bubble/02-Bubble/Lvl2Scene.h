@@ -13,6 +13,7 @@
 #include "Block.h"
 #include "PickUp.h"
 #include "Enemy.h"
+#include "Text.h"
 
 class Lvl2Scene : public Scene
 {
@@ -32,12 +33,12 @@ private:
 
 	TileMap *background, *map, *entities;
 	Player *player;
-	float currentTime;
 	ShaderProgram texProgram;
 	glm::ivec2 posCamera;
 	glm::mat4 projection, modelview;
 	vector<Block*> blocks;
 	vector<PickUp*> pickUps;
-	vector<Enemy*> enemies;	
+	vector<Enemy*> enemies;
+	Text *painter;
 };
 #endif // _SCENE_INCLUDE

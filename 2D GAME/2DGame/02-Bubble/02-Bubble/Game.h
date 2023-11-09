@@ -45,6 +45,17 @@ public:
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
 	void playMusic(string queCosa);
+	void imDead();
+
+	int getActualLvl() {return curScene;};
+	int getCoins() {return coins;};
+	int getPoints() {return points;};
+	int getLives() {return lives;};
+	int getRemainingTime() {return int(remainingTime);};
+
+	void addCoin() { ++coins; };
+	void addPoints() {points += 1000;};
+	
 
 private:
 	bool bPlay;                       // Continue to play game?
@@ -56,6 +67,11 @@ private:
 	bool changeScene;
 	ISoundEngine* mainMusic;
 	ISoundEngine* efectos;
+	//stats
+	int coins;
+	int points;
+	int lives;
+	double remainingTime;
 };
 
 

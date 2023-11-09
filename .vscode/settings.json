@@ -17,7 +17,8 @@
         "xstddef": "cpp",
         "xtr1common": "cpp",
         "algorithm": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "system_error": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

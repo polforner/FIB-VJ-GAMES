@@ -33,13 +33,12 @@ private:
 
 	TileMap *background, *map, *entities;
 	Player *player;
-	float currentTime;
 	ShaderProgram texProgram;
 	glm::ivec2 posCamera;
 	glm::mat4 projection, modelview;
 	vector<Block*> blocks;
 	vector<PickUp*> pickUps;
 	vector<Enemy*> enemies;	
-	Text *coins;
+	Text *painter;
 };
 #endif // _SCENE_INCLUDE

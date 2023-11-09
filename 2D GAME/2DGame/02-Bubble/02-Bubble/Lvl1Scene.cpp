@@ -146,16 +146,13 @@ void Lvl1Scene::init()
 	player -> setEnemies(enemies);
 	posCamera = glm::ivec2(-SCREEN_WIDTH, -SCREEN_HEIGHT);
 	updateCamera();
-	//projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	modelview = glm::mat4(1.0f);
-	currentTime = 0.0f;
-	coins = new Text();
-	coins -> init("fonts/SuperMario256.ttf");
+	painter = new Text();
+	painter -> init("fonts/SuperMario256.ttf");
 }
 
 void Lvl1Scene::update(int deltaTime)
 {
-	currentTime += deltaTime;
 	player->update(deltaTime);
 	int numBlocks = blocks.size();
 	for (int i = 0; i < numBlocks; ++i)
@@ -182,7 +179,8 @@ void Lvl1Scene::render()
 
 	background->render();
 	map->render();
-	//entities -> render();
+
+	//Render entities
 	int numBlocks = blocks.size();
 	for (int i = 0; i < numBlocks; ++i)
 		if (blocks[i] -> isEntityActive()) blocks[i] -> render();
@@ -196,7 +194,32 @@ void Lvl1Scene::render()
 		if (pickUps[i] -> isEntityActive()) pickUps[i] -> render();
 
 	player->render();
-	string text = "Coins x " + to_string(player -> getCoins());
-	coins -> render(text, glm::vec2(0, 0.1 * SCREEN_HEIGHT), 16, glm::vec4(1, 1, 1, 1));
+
+	//Render values
+	string text;
+	//Score text
+	text = "SCORE";
+	painter -> render(text, glm::vec2(0.1 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 32, glm::vec4(1, 1, 1, 1));
+	text = to_string(Game::instance().getPoints());
+	painter -> render(text, glm::vec2(0.1 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 32, glm::vec4(1, 1, 1, 1));
+
+	//Coins text
+	text = "COINS";
+	painter -> render(text, glm::vec2(0.3 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 32, glm::vec4(1, 0.843, 0, 1));
+	text = to_string(Game::instance().getCoins());
+	painter -> render(text, glm::vec2(0.3 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 32, glm::vec4(1, 0.843, 0, 1));
+
+	//Worlds info text
+	text = "WORLD";
+	painter -> render(text, glm::vec2(0.5 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 32, glm::vec4(1, 1, 1, 1));
+	text = "1 - 1";
+	painter -> render(text, glm::vec2(0.5 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 32, glm::vec4(1, 1, 1, 1));
+
+	//Time text
+	text = "TIME";
+	painter -> render(text, glm::vec2(0.7 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 32, glm::vec4(1, 0.843, 0, 1));
+	text = to_string(Game::instance().getRemainingTime());
+	painter -> render(text, glm::vec2(0.7 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 32, glm::vec4(1, 0.843, 0, 1));
+
 }
 
