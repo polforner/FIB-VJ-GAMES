@@ -1,4 +1,5 @@
 #include "Goomba.h"
+#include "Game.h"
 
 #define SIZE_X 60
 #define SIZE_Y 64
@@ -36,6 +37,7 @@ void Goomba::update(int deltaTime) {
     if (isHit) {
         sprite -> changeAnimation(CRUSHED);
         deadTime = 0;
+        Game::instance().playMusic("goombaDie");
         isHit = false;
     }
     else if (sprite -> animation() == CRUSHED) {

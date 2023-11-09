@@ -19,5 +19,6 @@ public:
 	void setPosition(const glm::vec2 &pos) override;
 	int pick() override;
 private:
+	int jumpAngle, startY;
 };
 #endif

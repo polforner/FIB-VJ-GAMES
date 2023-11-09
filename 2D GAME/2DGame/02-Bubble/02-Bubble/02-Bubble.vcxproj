@@ -24,7 +24,6 @@
     <ClInclude Include="Lvl2Scene.h" />
     <ClInclude Include="Mushroom.h" />
     <ClInclude Include="PickUp.h" />
-    <ClInclude Include="Piranha.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Quad.h" />
     <ClInclude Include="questionMark.h" />
@@ -52,7 +51,6 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Mushroom.cpp" />
     <ClCompile Include="PickUp.cpp" />
-    <ClCompile Include="Piranha.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="questionMark.cpp" />

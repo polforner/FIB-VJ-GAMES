@@ -50,7 +50,9 @@ void Lvl1Scene::prepareEntities() {
 			if (tileTipe == 11) block = new Brick();
 			else if (tileTipe == 3) { 
 				block = new QuestionMark();
-				pickUp = new Mushroom();
+				if (y <= 8) pickUp = new Star();
+				else pickUp = new Mushroom();
+				
 			}
 			else if (tileTipe == 23) pickUp = new Coin();
 			else if (tileTipe == 24) enemy = new Goomba();
@@ -147,6 +149,8 @@ void Lvl1Scene::init()
 	//projection = glm::ortho(0.f, float(SCREEN_WIDTH), float(SCREEN_HEIGHT), 0.f);
 	modelview = glm::mat4(1.0f);
 	currentTime = 0.0f;
+	coins = new Text();
+	coins -> init("fonts/SuperMario256.ttf");
 }
 
 void Lvl1Scene::update(int deltaTime)
@@ -192,5 +196,7 @@ void Lvl1Scene::render()
 		if (pickUps[i] -> isEntityActive()) pickUps[i] -> render();
 
 	player->render();
+	string text = "Coins x " + to_string(player -> getCoins());
+	coins -> render(text, glm::vec2(0, 0.1 * SCREEN_HEIGHT), 16, glm::vec4(1, 1, 1, 1));
 }
 

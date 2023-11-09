@@ -13,6 +13,7 @@
 #include "Block.h"
 #include "PickUp.h"
 #include "Enemy.h"
+#include "Text.h"
 
 class Lvl1Scene : public Scene
 {
@@ -39,5 +40,6 @@ private:
 	vector<Block*> blocks;
 	vector<PickUp*> pickUps;
 	vector<Enemy*> enemies;	
+	Text *coins;
 };
 #endif // _SCENE_INCLUDE

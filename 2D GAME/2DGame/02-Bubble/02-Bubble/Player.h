@@ -31,6 +31,7 @@ public:
 	void setEnemies(const vector<Enemy*> &e) {enemies = e;};
 
 	glm::ivec2 getPosition();
+	int getCoins() {return coins;};
 	
 private:
 	void configureSprites(ShaderProgram &shaderProgram);

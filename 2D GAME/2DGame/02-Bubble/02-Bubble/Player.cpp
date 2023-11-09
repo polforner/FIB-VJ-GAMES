@@ -266,7 +266,7 @@ void Player::selectSprite() {
 		spritesheet.loadFromFile("images/spriteStarMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 	}
 	if (isSwaping) {
-		if (timer % 500 < 250) {
+		if (timer % 250 < 125) {
 				spritesheet.loadFromFile("images/spriteMario.png", TEXTURE_PIXEL_FORMAT_RGBA);
 				size = glm::ivec2(56,64);
 				sprite = smallSprite;
@@ -307,7 +307,7 @@ void Player::update(int deltaTime)
 	sprite->update(deltaTime);
 	timer += deltaTime;
 
-	if(Game::instance().getKey('m')) {
+	if(!isSwaping && Game::instance().getKey('m')) {
 		changeState = true;
 		timer = 0;
 		isSwaping = true;
@@ -359,11 +359,12 @@ if(inControl) {
 					bJumping = true;
 					jumpAngle = 0;
 					startY = posPlayer.y;
+					Game::instance().playMusic("jump");
 				}
 			} else if (isEnemyCollision(DOWN)) {
 					bJumping = true;
 					jumpAngle = 0;
-					startY = posPlayer.y;			
+					startY = posPlayer.y;	
 			}
 			
 			if (posPlayer.y + size.y >= ((map -> getMapSize()).y) * (map -> getTileSize())) isEliminated = true;
@@ -433,10 +434,12 @@ if(inControl) {
 			jumpAngle = 0;
 			startY = posPlayer.y;
 			timer = 0;
+			Game::instance().playMusic("die");
 			isEliminated = false;
 		}
 		if (isSwaping) {
-			isSwaping = !(timer > 2000);
+			if (timer == 0) Game::instance().playMusic("mushroom");
+			isSwaping = !(timer > 1000);
 			changeState = true;
 		}
 		if (isStar) {

@@ -44,8 +44,7 @@ public:
 
 	bool getKey(int key) const;
 	bool getSpecialKey(int key) const;
-
-	//void playMusic(string queCosa);
+	void playMusic(string queCosa);
 
 private:
 	bool bPlay;                       // Continue to play game?
@@ -54,9 +53,9 @@ private:
 	bool keys[256], specialKeys[256]; // Store key states so that 
 									  // we can have access at any time
 	int curScene;
+	bool changeScene;
 	ISoundEngine* mainMusic;
-	//ISoundEngine* efectos;
-
+	ISoundEngine* efectos;
 };
 
 

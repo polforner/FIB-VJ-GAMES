@@ -1,4 +1,5 @@
 #include "Brick.h"
+#include "Game.h"
 
 #define SIZE_X 64
 #define SIZE_Y 64
@@ -54,11 +55,13 @@ void Brick::update(int deltaTime) {
         sprite->changeAnimation(MOVING);
         jumpAngle = 0;
         originalY = position.y;
+        Game::instance().playMusic("brickHit");
         isHit = false;
     }
     else if (isDestroyed && sprite -> animation() != BREAKING) {
         breakingTime = 0;
         sprite->changeAnimation(BREAKING);
+        Game::instance().playMusic("brickDestroy");
         isDestroyed = false;  
     }
 

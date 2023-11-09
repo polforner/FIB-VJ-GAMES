@@ -10,6 +10,8 @@ using namespace irrklang;
 enum Scenes {
 	MAIN, INSTR, LVL1, LVL2, CREDS, COUNT
 };
+
+const vector<char*> backgroundMusics = {"","","audio/lv1music.wav","audio/lv2music.wav",""};
 void Game::init()
 {
 	bPlay = true;
@@ -17,10 +19,8 @@ void Game::init()
 	scenes = vector<Scene*> (COUNT);
  	curScene = LVL2;
   	scenes[curScene] = new Lvl2Scene();
-	scenes[curScene] -> init();
 	curScene = LVL1;
 	scenes[curScene] = new Lvl1Scene();
-	scenes[curScene] -> init();
 
 	/*
  	curScene = INSTR; 
@@ -32,8 +32,10 @@ void Game::init()
 	scenes[curScene] = new SceneMain();
 	scenes[curScene] -> init();
  	*/
+ 	changeScene = true;
 	mainMusic = createIrrKlangDevice();
-	//efectos = createIrrKlangDevice();
+	efectos = createIrrKlangDevice();
+	
 	//mainMusic->play2D("/audio/getout.ogg", true);
 	
 	
@@ -48,6 +50,12 @@ bool Game::update(int deltaTime)
 
 void Game::render()
 {
+	if (changeScene) {
+		mainMusic -> stopAllSounds();
+		scenes[curScene] -> init(); 
+		changeScene = false;
+		mainMusic -> play2D(backgroundMusics[curScene], true);
+	}	
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	scenes[curScene] -> render();
 }
@@ -59,20 +67,18 @@ void Game::keyPressed(int key)
 	if (key == 'l'){
 		if((curScene != INSTR) && (curScene != CREDS)){
 			curScene = LVL1;
-			scenes[curScene] -> init();
-			mainMusic->play2D("audio/lv1music.wav", true);
+			changeScene = true;
 		}
 	}
 	if (key == 'p') {
 		if (curScene == MAIN) {
-
 			curScene = INSTR;
-			scenes[curScene] -> init(); 
+			changeScene = true;
 		}
 		else if (curScene == LVL1) {
 
 			curScene = LVL2;
-			scenes[curScene] -> init(); 
+			changeScene = true;
 		}
 	}
 	if (key == 'b') {
@@ -129,14 +135,18 @@ bool Game::getSpecialKey(int key) const
 	return specialKeys[key];
 }
 
-/*
-void Game::playMusic(string queCosa){
-	if (queCosa == "goombaDie")efectos->play2D("../../audio/smb_stomp.wav", false);
-	if (queCosa == "brickHit")efectos->play2D("../../audio/smb_bump.wav", false);
-	if (queCosa == "brickDestroy")efectos->play2D("../../audio/smb_breakblock.wav", false);
-	if (queCosa == "shroom")efectos->play2D("../../audio/smb_powerup.wav", false);
-	if (queCosa == "die")efectos->play2D("../../audio/smb_mariodie.wav", false);
-	if (queCosa == "flag")efectos->play2D("../../audio/smb_stage_clear.wav", false); //que suene al final de la animación
-	if (queCosa == "jump")efectos->play2d("../../audio/jump-small.wav", false); 
+void Game::playMusic(string queCosa) {
+	efectos -> stopAllSounds();
+	
+	if (queCosa == "goombaDie") efectos->play2D("audio/smb_stomp.wav", false);
+	else if (queCosa == "brickHit")efectos->play2D("audio/smb_bump.wav", false);
+	else if (queCosa == "brickDestroy")efectos->play2D("audio/smb_breakblock.wav", false);
+	else if (queCosa == "mushroom")efectos->play2D("audio/smb_powerup.wav", false);
+	else if (queCosa == "die"){
+		mainMusic -> stopAllSounds();
+		efectos->play2D("audio/smb_mariodie.wav", false);
+	}
+	else if (queCosa == "flag")efectos->play2D("audio/smb_stage_clear.wav", false); //que suene al final de la animación
+	else if (queCosa == "jump")efectos->play2D("audio/smb_jump-small.wav", false); 
+}
 
-*/
