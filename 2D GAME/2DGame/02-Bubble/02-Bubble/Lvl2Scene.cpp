@@ -14,7 +14,7 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 1
+#define INIT_PLAYER_X_TILES 160
 #define INIT_PLAYER_Y_TILES 12
 
 #define CAMERA_VELOCITY 2
@@ -175,7 +175,7 @@ void Lvl2Scene::render()
 
 	background->render();
 	map->render();
-	entities -> render();
+	//entities -> render();
 	int numBlocks = blocks.size();
 	for (int i = 0; i < numBlocks; ++i)
 		if (blocks[i] -> isEntityActive()) blocks[i] -> render();

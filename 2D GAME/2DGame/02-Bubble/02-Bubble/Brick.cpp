@@ -16,7 +16,9 @@ enum States
 void Brick::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram) {
     Block::init(tileMapPos, shaderProgram);
     breakingTime = 0;
-    spritesheet.loadFromFile("images/spriteBlockLv1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    if (Game::instance().getActualLvl() == 1) spritesheet.loadFromFile("images/spriteBlockLv1.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    else if (Game::instance().getActualLvl() == 2) spritesheet.loadFromFile("images/spriteBlockLv2.png", TEXTURE_PIXEL_FORMAT_RGBA);
+    
     sprite = Sprite::createSprite(glm::ivec2(64, 64), glm::vec2(0.5, 0.5), &spritesheet, &shaderProgram);
     sprite->setNumberAnimations(3);
 

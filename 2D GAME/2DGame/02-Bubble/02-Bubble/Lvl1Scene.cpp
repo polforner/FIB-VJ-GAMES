@@ -15,7 +15,7 @@
 #define SCREEN_X 0
 #define SCREEN_Y 0
 
-#define INIT_PLAYER_X_TILES 0
+#define INIT_PLAYER_X_TILES 230
 #define INIT_PLAYER_Y_TILES 12
 
 #define CAMERA_VELOCITY 2
@@ -121,7 +121,7 @@ void Lvl1Scene::updateCamera() {
 		// Asegúrate de que la cámara no se salga de los límites del mapa.
 		int mapWidth = map->getMapSize().x * map->getTileSize();
 		posCamera.x = glm::clamp(posCamera.x, 0, mapWidth - SCREEN_WIDTH);
-		player->setMinCoords(posCamera);
+		player-> setMinCoords(posCamera);
 		// Actualiza la matriz de vista para reflejar la posición de la cámara.
 		int mapHeight = map->getMapSize().y * map->getTileSize();
 		projection = glm::ortho(0.f + posCamera.x, float(SCREEN_WIDTH) + posCamera.x, float(mapHeight), 0.f);

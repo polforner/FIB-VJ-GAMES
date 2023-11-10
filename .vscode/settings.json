@@ -18,7 +18,13 @@
         "xtr1common": "cpp",
         "algorithm": "cpp",
         "limits": "cpp",
-        "system_error": "cpp"
+        "system_error": "cpp",
+        "istream": "cpp",
+        "xlocmes": "cpp",
+        "xlocmon": "cpp",
+        "xlocnum": "cpp",
+        "xloctime": "cpp",
+        "xmemory": "cpp"
     },
     "C_Cpp.intelliSenseEngineFallback": "enabled"
 }

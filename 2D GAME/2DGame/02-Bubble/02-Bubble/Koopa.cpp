@@ -1,5 +1,5 @@
 #include "Koopa.h"
-
+#include "Game.h"
 #define SIZE_X 60
 #define SIZE_Y 64
 
@@ -45,6 +45,7 @@ void Koopa::update(int deltaTime) {
     if (isHit) {
         if (sprite -> animation() == WAITING || sprite -> animation() == ROLLING_LEFT || sprite -> animation() == ROLLING_RIGHT) isActive = false;
         else sprite -> changeAnimation(WAITING);
+        Game::instance().playMusic("goombaDie");
         deadTime = 0;
         isHit = false;
     }

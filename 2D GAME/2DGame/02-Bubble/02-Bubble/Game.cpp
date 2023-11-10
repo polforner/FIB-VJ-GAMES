@@ -73,6 +73,7 @@ void Game::keyPressed(int key)
 	if (key == 'l'){
 		if((curScene != INSTR) && (curScene != CREDS)){
 			curScene = LVL1;
+			remainingTime = 120;	
 			changeScene = true;
 		}
 	}
@@ -82,35 +83,32 @@ void Game::keyPressed(int key)
 			changeScene = true;
 		}
 		else if (curScene == LVL1) {
-
 			curScene = LVL2;
+			remainingTime = 120;	
 			changeScene = true;
 		}
 	}
 	if (key == 'b') {
 		if ((curScene == INSTR) || (curScene == CREDS)) {
-
 			curScene = MAIN;
-			//scenes[curScene] -> init(); 
+			changeScene = true;
 		}
 	}
 	if (key == '2') {
-		if ((curScene == MAIN) {
-
+		if (curScene == MAIN) {
 			curScene = INSTR;
-			//scenes[curScene] -> init(); 
+			changeScene = true;
 		}
-		else if ((curScene == LVL1) {
-
+		else if (curScene == LVL1) {
 			curScene = LVL2;
-			//scenes[curScene] -> init(); 
+			remainingTime = 120;	
+			changeScene = true;
 		}
 	}
 	if (key == 3) {
 		if ((curScene != LVL1) && (curScene != LVL2)) {
-
 			curScene = CREDS;
-			//scenes[curScene] -> init(); 
+			changeScene = true;
 		}
 	}
 	keys[key] = true;
@@ -153,6 +151,17 @@ bool Game::getSpecialKey(int key) const
 	return specialKeys[key];
 }
 
+int Game::getActualLvl() {
+	if (curScene == LVL1) return 1;
+	else if (curScene == LVL2) return 2;
+	return -1;
+}
+
+glm::ivec2 Game::flagPosition() {
+	if (curScene == LVL1) return glm::ivec2(232 * 64, 12 * 64);
+	else if (curScene == LVL2) return glm::ivec2(162 * 64, 12 * 64);
+}
+
 void Game::playMusic(string queCosa) {
 	efectos -> stopAllSounds();
 	
@@ -176,5 +185,11 @@ void Game::imDead() {
 	lives -= 1;
 	remainingTime = 120;
 	if (lives < 0) curScene = CREDS;
+	changeScene = true;
+}
+
+void Game::win() {
+	if (curScene == LVL1) curScene = LVL2;
+	else if (curScene == LVL2) curScene = CREDS;
 	changeScene = true;
 }

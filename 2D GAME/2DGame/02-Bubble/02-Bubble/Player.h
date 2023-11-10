@@ -55,7 +55,8 @@ private:
 	bool inControl;
 	bool isEliminated;
 	bool isRunning;
-
+	bool flagGrabbed;
+	bool win;
 	int timer;
 	double velocity;
 

@@ -46,8 +46,10 @@ public:
 	bool getSpecialKey(int key) const;
 	void playMusic(string queCosa);
 	void imDead();
+	void win();
+	glm::ivec2 flagPosition();
 
-	int getActualLvl() {return curScene;};
+	int getActualLvl();
 	int getCoins() {return coins;};
 	int getPoints() {return points;};
 	int getLives() {return lives;};

@@ -125,7 +125,7 @@ void Player::configureSprites(ShaderProgram &shaderProgram) {
 	bigSprite->addKeyframe(JUMP_LEFT, glm::vec2(0.5f, 0.f)); 
 
 	bigSprite->setAnimationSpeed(GRAB_FLAG, 8);
-	bigSprite->addKeyframe(GRAB_FLAG, glm::vec2(0.375f, 0.25f));
+	bigSprite->addKeyframe(GRAB_FLAG, glm::vec2(0.f, 0.875f));
 }
 
 bool Player::isBlockCollision(const int &dir) {
@@ -289,6 +289,8 @@ void Player::init(const glm::ivec2 &tileMapPos, ShaderProgram &shaderProgram)
 	bJumping = false;
 	changeState = false;
 	isRunning = false;
+	flagGrabbed = false;
+	win = false;
 	configureSprites(shaderProgram);
 	
 	state = SMALL;
@@ -317,11 +319,9 @@ void Player::update(int deltaTime)
 		timer = 0;
 		isStar = true;
 	}
-	if(Game::instance().getKey('q')) {
-		isRunning = !isRunning;
-	}
 	if (Game::instance().getRemainingTime() == 0) isEliminated = true;
-
+	isRunning = Game::instance().getKey('x') || Game::instance().getSpecialKey(GLUT_ACTIVE_SHIFT);
+	if (isStar) isRunning = true;
 if(inControl) {
 		if(bJumping)
 		{
@@ -378,9 +378,9 @@ if(inControl) {
 			else velocity = glm::min(-INI_VELOCITY, velocity + DECELERATION * deltaTime);
 			
 			posPlayer.x += int(velocity);
-
-			if(posPlayer.x < minCoords.x || isBlockCollision(LEFT) 
-			|| isEnemyCollision(LEFT) || map->collisionMoveLeft(posPlayer, size, &posPlayer.x)) {
+			if (posPlayer.x < minCoords.x) posPlayer.x -= int(velocity);
+			if(isBlockCollision(LEFT) || isEnemyCollision(LEFT) 
+			|| map->collisionMoveLeft(posPlayer, size, &posPlayer.x)) {
 				velocity = -INI_VELOCITY;
 				sprite->changeAnimation(STAND_LEFT);
 			}
@@ -394,7 +394,8 @@ if(inControl) {
 			else velocity = glm::max(INI_VELOCITY, velocity - DECELERATION * deltaTime);
 			
 			posPlayer.x += int(velocity);
-
+			if (posPlayer.x > (Game::instance().flagPosition()).x 
+			&& posPlayer.y < (Game::instance().flagPosition()).y ) flagGrabbed = true;
 			if((posPlayer.x > ((map -> getMapSize()).x * map -> getTileSize())) || isBlockCollision(RIGHT) 
 			|| isEnemyCollision(RIGHT) || map->collisionMoveRight(posPlayer, size, &posPlayer.x))
 			{
@@ -420,6 +421,16 @@ if(inControl) {
 		else posPlayer.y = int(startY - JUMP_HEIGHT * sin(3.14159f * jumpAngle / 180.f));
 		if (timer > 5000) Game::instance().imDead();
 	}
+	else if (sprite -> animation() == GRAB_FLAG){
+		if (posPlayer.y < (Game::instance().flagPosition()).y) posPlayer.y += 1;
+		else {
+			sprite -> changeAnimation(MOVE_RIGHT);
+			posPlayer.x += 64;
+			posPlayer.y += 64;
+			win = true;
+			timer = 0;
+		}
+	} 
 	else {
 		if (isEliminated) {
 			inControl = false;
@@ -430,18 +441,39 @@ if(inControl) {
 			sprite->changeAnimation(ELIMINATE); 
 			jumpAngle = 0;
 			startY = posPlayer.y;
-			timer = 0;
 			Game::instance().playMusic("die");
 			isEliminated = false;
 		}
+		if (flagGrabbed) {
+			inControl = false;
+			timer = 0;
+			posPlayer.x = (Game::instance().flagPosition()).x + 64;
+			state = SMALL;
+			changeState = true;
+			if (posPlayer.y < (Game::instance().flagPosition()).y - 5 * 64) posPlayer.y = (Game::instance().flagPosition()).y - 5 * 64;
+			sprite -> changeAnimation(GRAB_FLAG);
+			Game::instance().playMusic("flag");
+			flagGrabbed = false;
+		}
+		if (win) {
+			if (timer < 2000) posPlayer.x += 1;
+			else if (timer < 5000) sprite -> changeAnimation(STAND_RIGHT);
+			else Game::instance().win();
+		}
 		if (isSwaping) {
-			if (timer == 0) Game::instance().playMusic("mushroom");
+			if (timer == 0) {
+				if (state == BIG) Game::instance().playMusic("mushroom");
+				else Game::instance().playMusic("takeDmg");
+			}
 			isSwaping = !(timer > 1000);
 			changeState = true;
 		}
 		if (isStar) {
 			isStar= !(timer > 10000);
-			if(!isStar) changeState = true;
+			if(!isStar) {
+				changeState = true;
+				isRunning = false;
+			}
 		}
 		if (changeState) {
 			selectSprite();
