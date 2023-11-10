@@ -1,5 +1,5 @@
 #ifndef _SCENECREDS_INCLUDE
-#define _SCENECREDS_RINCLUDE
+#define _SCENECREDS_INCLUDE
 
 
 #include <glm/glm.hpp>
@@ -18,8 +18,8 @@ class SceneCreds : public Scene
 {
 
 public:
-	Lvl1Scene();
-	~Lvl1Scene();
+	SceneCreds();
+	~SceneCreds();
 
 	void init() override;
 	void update(int deltaTime) override;
