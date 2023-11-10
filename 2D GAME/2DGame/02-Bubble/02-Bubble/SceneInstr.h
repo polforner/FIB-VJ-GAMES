@@ -1,5 +1,5 @@
 #ifndef _SCENEINSTR_INCLUDE
-#define _SCENEMAIN_INCLUDE
+#define _SCENEINSTR_INCLUDE
 
 
 #include <glm/glm.hpp>
