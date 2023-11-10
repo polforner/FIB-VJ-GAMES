@@ -18,8 +18,8 @@ class SceneInstr : public Scene
 {
 
 public:
-	Lvl1Scene();
-	~Lvl1Scene();
+	SceneMain();
+	~SceneMain();
 
 	void init() override;
 	void update(int deltaTime) override;
