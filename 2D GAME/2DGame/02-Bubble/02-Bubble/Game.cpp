@@ -86,6 +86,11 @@ void Game::keyPressed(int key) {
 			changeScene = true;
 		}
 	}
+	if (key == 'o') {
+		if ((curScene == LVL1) || (curScene == LVL2)) {
+			remainingTime -= 10;
+		}
+	}
 	if (key == '1') {
 		if (curScene == MAIN) {
 			curScene = LVL1;
@@ -161,6 +166,11 @@ bool Game::getSpecialKey(int key) const
 	return specialKeys[key];
 }
 
+int Game::getRemainingTime() {
+	if (remainingTime <= 0) return 0;
+	return remainingTime;
+}
+
 int Game::getActualLvl() {
 	if (curScene == LVL1) return 1;
 	else if (curScene == LVL2) return 2;
@@ -189,17 +199,30 @@ void Game::playMusic(string queCosa) {
 	}//que suene al final de la animación
 	else if (queCosa == "jump")efectos->play2D("audio/smb_jump-small.wav", false); 
 	else if (queCosa == "takeDmg")efectos->play2D("audio/smb_shrink.wav", false); 
+	else if (queCosa == "starMario") {
+		mainMusic -> stopAllSounds();
+		efectos-> play2D("audio/smb_starMario.wav", false);
+	}
+	else if (queCosa == "main") {
+		mainMusic -> stopAllSounds();
+		if (curScene == LVL1) mainMusic -> play2D("audio/lv1music.wav", false);
+		else mainMusic -> play2D("audio/lv2music.wav", false);
+	}
 }
 
 void Game::imDead() {
 	lives -= 1;
 	remainingTime = 120;
-	if (lives < 0) curScene = CREDS;
+	if (lives < 0) {
+		curScene = CREDS;
+		lives = 3;
+	}
 	changeScene = true;
 }
 
 void Game::win() {
 	if (curScene == LVL1) curScene = LVL2;
 	else if (curScene == LVL2) curScene = CREDS;
+	remainingTime = 120;
 	changeScene = true;
 }

@@ -147,7 +147,10 @@ bool Player::isBlockCollision(const int &dir) {
 			
 			if (dir == UP && collision) {
 				if (!isStar && state == SMALL) blocks[i] -> hit();
-				else blocks[i] -> destroy();
+				else {
+					blocks[i] -> destroy();
+					Game::instance().addPoints(10);
+				}
 			}
 			if (collision) someCollision = true;
 		}
@@ -173,20 +176,19 @@ bool Player::isPickUpCollision(const int &dir) {
 			
 			if (collision) {
 				int effect = pickUps[i] -> pick();
-				if (effect == 1) {
-					Game::instance().addCoin();
-				}
-				else if (effect == 2) {
+				if (effect == 2) {
 					if (state == SMALL) {
 						state = BIG;
 						isSwaping = true;
 						if(!isStar) timer = 0;
 						changeState = true;
 					}
-					else Game::instance().addPoints();
+					else Game::instance().addPoints(1000);
 				}
 				else if (effect == 3) {
+					if (isStar) Game::instance().addPoints(10000);
 					if (state == SMALL) {
+						Game::instance().playMusic("starMario");
 						isStar = true;
 						changeState = true;
 						timer = 0;
@@ -196,7 +198,7 @@ bool Player::isPickUpCollision(const int &dir) {
 						changeState = true;
 						timer = 0;
 					}
-					else Game::instance().addPoints();
+					
 				}
 			}
 		}
@@ -223,7 +225,10 @@ bool Player::isEnemyCollision(const int &dir) {
 				collision = enemies[i] -> collisionMoveUp(constPosition, size, &posPlayer.y);
 			
 			if (collision) {
-				if (isStar || dir == DOWN) enemies[i] -> hit();
+				if (isStar || dir == DOWN) {
+					enemies[i] -> hit();
+					Game::instance().addPoints(200);
+				}
 				else {
 					if(!isSwaping) hit();
 					collision = false;
@@ -317,6 +322,7 @@ void Player::update(int deltaTime)
 	if(Game::instance().getKey('g')) {
 		changeState = true;
 		timer = 0;
+		Game::instance().playMusic("starMario");
 		isStar = true;
 	}
 	if (Game::instance().getRemainingTime() == 0) isEliminated = true;
@@ -353,7 +359,7 @@ if(inControl) {
 			
 			if(isBlockCollision(DOWN) || map->collisionMoveDown(posPlayer, size, &posPlayer.y))
 			{
-				if(Game::instance().getSpecialKey(GLUT_KEY_UP))
+				if(Game::instance().getSpecialKey(GLUT_KEY_UP) || Game::instance().getKey(32))
 				{
 					bJumping = true;
 					jumpAngle = 0;
@@ -440,6 +446,7 @@ if(inControl) {
 			changeState = true;
 			sprite->changeAnimation(ELIMINATE); 
 			jumpAngle = 0;
+			timer = 0;
 			startY = posPlayer.y;
 			Game::instance().playMusic("die");
 			isEliminated = false;
@@ -447,13 +454,16 @@ if(inControl) {
 		if (flagGrabbed) {
 			inControl = false;
 			timer = 0;
-			posPlayer.x = (Game::instance().flagPosition()).x + 64;
+			glm::ivec2 flagPosition = Game::instance().flagPosition();
+			posPlayer.x = flagPosition.x + 64;
 			state = SMALL;
 			changeState = true;
-			if (posPlayer.y < (Game::instance().flagPosition()).y - 5 * 64) posPlayer.y = (Game::instance().flagPosition()).y - 5 * 64;
+			if (posPlayer.y < flagPosition.y - 5 * 64) posPlayer.y = flagPosition.y - 5 * 64;
 			sprite -> changeAnimation(GRAB_FLAG);
 			Game::instance().playMusic("flag");
 			flagGrabbed = false;
+			Game::instance().addPoints(Game::instance().getRemainingTime() * 10);
+			Game::instance().addPoints(((flagPosition.y - posPlayer.y) / 64)* 500);
 		}
 		if (win) {
 			if (timer < 2000) posPlayer.x += 1;
@@ -473,6 +483,7 @@ if(inControl) {
 			if(!isStar) {
 				changeState = true;
 				isRunning = false;
+				Game::instance().playMusic("main");
 			}
 		}
 		if (changeState) {

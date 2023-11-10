@@ -1,5 +1,5 @@
 #include "Coin.h"
-
+#include "Game.h"
 #define SIZE_X 32
 #define SIZE_Y 32
 
@@ -47,6 +47,8 @@ void Coin::update(int deltaTime) {
 
     if (isPicked) {
         sprite->changeAnimation(PICKED);
+        Game::instance().addPoints(100);
+        Game::instance().addCoin();
         jumpAngle = 0;
         originalY = position.y;
         isPicked = false;
@@ -56,13 +58,14 @@ void Coin::update(int deltaTime) {
 int Coin::pick() {
     if (sprite -> animation() == PICKED) return 0;
     isPicked = true;
+
     return 1;
 }
 
 bool Coin::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size) 
 {
     if (collision(position, glm::ivec2(SIZE_X,SIZE_Y), pos, size)) {
-		return true;
+		if (sprite -> animation() != PICKED) return true;
     }
     return false;
 }
@@ -70,7 +73,7 @@ bool Coin::collisionMoveLeft(const glm::ivec2 &pos, const glm::ivec2 &size)
 bool Coin::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int *posX) 
 {
     if (collision(position, glm::ivec2(SIZE_X,SIZE_Y), pos, size)) {
-		return true;
+		if (sprite -> animation() != PICKED) return true;
     }
     return false;
 }
@@ -78,7 +81,7 @@ bool Coin::collisionMoveRight(const glm::ivec2 &pos, const glm::ivec2 &size, int
 bool Coin::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) 
 {
     if (collision(position, glm::ivec2(SIZE_X,SIZE_Y), pos, size)) {
-		return true;
+		if (sprite -> animation() != PICKED) return true;
     }
     return false;
 }
@@ -86,7 +89,7 @@ bool Coin::collisionMoveDown(const glm::ivec2 &pos, const glm::ivec2 &size, int 
 bool Coin::collisionMoveUp(const glm::ivec2 &pos, const glm::ivec2 &size, int *posY) 
 {
     if (collision(position, glm::ivec2(SIZE_X,SIZE_Y), pos, size)) { 
-		return true;
+		if (sprite -> animation() != PICKED) return true;
     }
     return false;
 }

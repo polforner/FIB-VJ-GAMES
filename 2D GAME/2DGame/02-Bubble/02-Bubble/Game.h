@@ -53,10 +53,10 @@ public:
 	int getCoins() {return coins;};
 	int getPoints() {return points;};
 	int getLives() {return lives;};
-	int getRemainingTime() {return int(remainingTime);};
+	int getRemainingTime();
 
 	void addCoin() { ++coins; };
-	void addPoints() {points += 1000;};
+	void addPoints(int p) {points += p;};
 	
 
 private:

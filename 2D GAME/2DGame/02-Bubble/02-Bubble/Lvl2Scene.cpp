@@ -175,14 +175,13 @@ void Lvl2Scene::render()
 
 	background->render();
 	map->render();
-	//entities -> render();
-	int numBlocks = blocks.size();
-	for (int i = 0; i < numBlocks; ++i)
-		if (blocks[i] -> isEntityActive()) blocks[i] -> render();
-
 	int numPickUps = pickUps.size();
 	for (int i = 0; i < numPickUps; ++i)
 		if (pickUps[i] -> isEntityActive()) pickUps[i] -> render();
+
+	int numBlocks = blocks.size();
+	for (int i = 0; i < numBlocks; ++i)
+		if (blocks[i] -> isEntityActive()) blocks[i] -> render();
 
 	int numEnemies = enemies.size();
 	for (int i = 0; i < numEnemies; ++i)
@@ -190,30 +189,35 @@ void Lvl2Scene::render()
 
 	player->render();
 
-	//Render values
 	string text;
 	//Score text
 	text = "SCORE";
-	painter -> render(text, glm::vec2(0.1 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 32, glm::vec4(1, 1, 1, 1));
+	painter -> render(text, glm::vec2(0.f * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
 	text = to_string(Game::instance().getPoints());
-	painter -> render(text, glm::vec2(0.1 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 32, glm::vec4(1, 1, 1, 1));
+	painter -> render(text, glm::vec2(0.f * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
 
 	//Coins text
 	text = "COINS";
-	painter -> render(text, glm::vec2(0.3 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 32, glm::vec4(1, 0.843, 0, 1));
-	text = to_string(Game::instance().getCoins());
-	painter -> render(text, glm::vec2(0.3 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 32, glm::vec4(1, 0.843, 0, 1));
+	painter -> render(text, glm::vec2(0.18 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
+	text = "x" + to_string(Game::instance().getCoins());
+	painter -> render(text, glm::vec2(0.18 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
 
 	//Worlds info text
 	text = "WORLD";
-	painter -> render(text, glm::vec2(0.5 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 32, glm::vec4(1, 1, 1, 1));
+	painter -> render(text, glm::vec2(0.35 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
 	text = "1 - 2";
-	painter -> render(text, glm::vec2(0.5 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 32, glm::vec4(1, 1, 1, 1));
+	painter -> render(text, glm::vec2(0.35 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
 
 	//Time text
-	text = "TIME";
-	painter -> render(text, glm::vec2(0.7 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 32, glm::vec4(1, 0.843, 0, 1));
+	text = "TIEMPO";
+	painter -> render(text, glm::vec2(0.55 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
 	text = to_string(Game::instance().getRemainingTime());
-	painter -> render(text, glm::vec2(0.7 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 32, glm::vec4(1, 0.843, 0, 1));
+	painter -> render(text, glm::vec2(0.55 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
+
+	//Lifes text
+	text = "VIDAS";
+	painter -> render(text, glm::vec2(0.80 * SCREEN_WIDTH, 0.05 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
+	text = "x" + to_string(Game::instance().getLives());
+	painter -> render(text, glm::vec2(0.80 * SCREEN_WIDTH, 0.10 * SCREEN_HEIGHT), 25, glm::vec4(1, 1, 1, 1));
 }
 
