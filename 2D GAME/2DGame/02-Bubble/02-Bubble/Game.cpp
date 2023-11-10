@@ -94,6 +94,18 @@ void Game::keyPressed(int key)
 			//scenes[curScene] -> init(); 
 		}
 	}
+	if (key == '2') {
+		if ((curScene == MAIN) {
+
+			curScene = INSTR;
+			//scenes[curScene] -> init(); 
+		}
+		else if ((curScene == LVL1) {
+
+			curScene = LVL2;
+			//scenes[curScene] -> init(); 
+		}
+	}
 	if (key == 3) {
 		if ((curScene != LVL1) && (curScene != LVL2)) {
 
