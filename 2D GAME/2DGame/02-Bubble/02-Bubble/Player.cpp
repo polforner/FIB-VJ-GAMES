@@ -320,7 +320,7 @@ void Player::update(int deltaTime)
 		isStar = true;
 	}
 	if (Game::instance().getRemainingTime() == 0) isEliminated = true;
-	isRunning = Game::instance().getKey('x') || Game::instance().getSpecialKey(GLUT_ACTIVE_SHIFT);
+	isRunning = Game::instance().getKey('x');
 	if (isStar) isRunning = true;
 if(inControl) {
 		if(bJumping)

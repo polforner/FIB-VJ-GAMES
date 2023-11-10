@@ -28,6 +28,9 @@
     <ClInclude Include="Quad.h" />
     <ClInclude Include="questionMark.h" />
     <ClInclude Include="Scene.h" />
+    <ClInclude Include="SceneCreds.h" />
+    <ClInclude Include="SceneInstr.h" />
+    <ClInclude Include="SceneMain.h" />
     <ClInclude Include="Shader.h" />
     <ClInclude Include="ShaderProgram.h" />
     <ClInclude Include="Sprite.h" />
@@ -55,6 +58,9 @@
     <ClCompile Include="Quad.cpp" />
     <ClCompile Include="questionMark.cpp" />
     <ClCompile Include="Scene.cpp" />
+    <ClCompile Include="SceneCreds.cpp" />
+    <ClCompile Include="SceneInstr.cpp" />
+    <ClCompile Include="SceneMain.cpp" />
     <ClCompile Include="Shader.cpp" />
     <ClCompile Include="ShaderProgram.cpp" />
     <ClCompile Include="Sprite.cpp" />

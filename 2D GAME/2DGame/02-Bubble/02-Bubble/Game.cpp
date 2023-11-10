@@ -1,8 +1,11 @@
 #include <GL/glew.h>
 #include <GL/glut.h>
 #include "Game.h"
+#include "SceneMain.h"
+#include "SceneInstr.h"
 #include "Lvl1Scene.h"
 #include "Lvl2Scene.h"
+#include "SceneCreds.h"
 #include "irrKlang.h"
 using namespace irrklang;
 #pragma comment(lib, "irrKlang.lib")
@@ -17,33 +20,30 @@ void Game::init()
 	bPlay = true;
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
 	scenes = vector<Scene*> (COUNT);
- 	curScene = LVL2;
-  	scenes[curScene] = new Lvl2Scene();
+   	curScene = MAIN;
+	scenes[curScene] = new SceneMain();
 	scenes[curScene] -> init();
 	curScene = LVL1;
 	scenes[curScene] = new Lvl1Scene();
 	scenes[curScene] -> init();
-
-	/*
+ 	curScene = LVL2;
+  	scenes[curScene] = new Lvl2Scene();
+	scenes[curScene] -> init();
+   	curScene = CREDS; 
+    scenes[curScene] = new SceneCreds();
+	scenes[curScene] -> init();
  	curScene = INSTR; 
   	scenes[curScene] = new SceneInstr(); 
-   	curScene = CREDS; 
-    	scenes[curScene] = new SceneCreds(); 
-
-   	curScene = MAIN;
-	scenes[curScene] = new SceneMain();
 	scenes[curScene] -> init();
- 	*/
+
+ 	curScene = MAIN;
  	changeScene = true;
 	mainMusic = createIrrKlangDevice();
 	efectos = createIrrKlangDevice();
-	
-
 	coins = 0;
 	points = 0;
 	lives = 3;
 	remainingTime = 120;
-	
 }
 
 bool Game::update(int deltaTime)
@@ -66,8 +66,7 @@ void Game::render()
 	scenes[curScene] -> render();
 }
 
-void Game::keyPressed(int key)
-{
+void Game::keyPressed(int key) {
 	if (key == 27) // Escape code
 		bPlay = false;
 	if (key == 'l'){
@@ -94,14 +93,32 @@ void Game::keyPressed(int key)
 			changeScene = true;
 		}
 	}
+	if (key == '1') {
+		if (curScene == MAIN) {
+			curScene = LVL1;
+			remainingTime = 120;
+			changeScene = true;
+		}
+		else if (curScene == LVL1) {
+			curScene = LVL1;
+			remainingTime = 120;	
+			changeScene = true;
+		}
+	}
 	if (key == '2') {
 		if (curScene == MAIN) {
 			curScene = INSTR;
 			changeScene = true;
 		}
-		else if (curScene == LVL1) {
+		else if (curScene == LVL1 || curScene == LVL2) {
 			curScene = LVL2;
 			remainingTime = 120;	
+			changeScene = true;
+		}
+	}
+	if (key == '3') {
+		if (curScene == MAIN) {
+			curScene = CREDS;
 			changeScene = true;
 		}
 	}

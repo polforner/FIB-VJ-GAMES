@@ -7,12 +7,7 @@
 #include "ShaderProgram.h"
 #include "TileMap.h"
 #include "Scene.h"
-
-#include "Player.h"
-#include "Entity.h"
-#include "Block.h"
-#include "PickUp.h"
-#include "Enemy.h"
+#include "Sprite.h"
 
 class SceneInstr : public Scene
 {
@@ -27,19 +22,10 @@ public:
 
 private:
 	void initShaders();
-	void updateCamera();
-	void prepareEntities();
 
-	TileMap *background, *map, *entities;
-	Player *player;
-	float currentTime;
 	ShaderProgram texProgram;
-	glm::ivec2 posCamera;
 	glm::mat4 projection, modelview;
-	vector<Block*> blocks;
-	vector<PickUp*> pickUps;
-	vector<Enemy*> enemies;	
-	Spritesheet spritesheet;
-	Sprite smallSprite;
+	Texture spritesheet;
+	Sprite *sprite;
 };
-#endif // _SCENE_INCLUDE
+#endif
