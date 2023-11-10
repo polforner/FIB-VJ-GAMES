@@ -70,13 +70,6 @@ void Game::keyPressed(int key)
 {
 	if (key == 27) // Escape code
 		bPlay = false;
-	if (key == 'l'){
-		if((curScene != INSTR) && (curScene != CREDS)){
-			curScene = LVL1;
-			remainingTime = 120;	
-			changeScene = true;
-		}
-	}
 	if (key == 'p') {
 		if (curScene == MAIN) {
 			curScene = INSTR;
@@ -94,6 +87,13 @@ void Game::keyPressed(int key)
 			changeScene = true;
 		}
 	}
+	if (key == 'l'){
+		if((curScene != INSTR) && (curScene != CREDS)){
+			curScene = LVL1;
+			remainingTime = 120;	
+			changeScene = true;
+		}
+	}
 	if (key == '2') {
 		if (curScene == MAIN) {
 			curScene = INSTR;
@@ -105,7 +105,7 @@ void Game::keyPressed(int key)
 			changeScene = true;
 		}
 	}
-	if (key == 3) {
+	if (key == '3') {
 		if ((curScene != LVL1) && (curScene != LVL2)) {
 			curScene = CREDS;
 			changeScene = true;
