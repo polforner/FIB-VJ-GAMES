@@ -1,5 +1,5 @@
-#ifndef _SCENEINSTR_INCLUDE
-#define _SCENEMAIN_INCLUDE
+#ifndef _SCENECREDS_INCLUDE
+#define _SCENECREDS_RINCLUDE
 
 
 #include <glm/glm.hpp>
@@ -14,7 +14,7 @@
 #include "PickUp.h"
 #include "Enemy.h"
 
-class SceneInstr : public Scene
+class SceneCreds : public Scene
 {
 
 public:
