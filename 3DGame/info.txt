@@ -7,4 +7,4 @@ Webs de interes
   -12 rules for animation disney (the illusion of life)
   Toms planner diagrama de gantt (la memoria la puedo hacer yo entera, es lo q hacemos en software)
   Pensar y decidir un estilo -> magicavoxel, mixamo (FBX for unity)
-
+https://www.cs.upc.edu/~jalonso/vj/
