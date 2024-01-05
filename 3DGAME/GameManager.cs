@@ -8,19 +8,31 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
     
-    
+    //Municion en reserva de cada una de las armas. 
     private int[] ammo = {20, 0};
-    private int[] clip = {20, 0};
+    //Municion actual para cada una de las armas. 
+    private int[] clip = {20, 5};
+    //Valores máximos de ciertos parámetros. 
+    //Por orden: 
+    // max[0] = ammo max lanzas, max[1] = ammo max melee, max[2] = hp max
+    private int[] max = {100, 50, 100};
+    //Vida actual del jugador 
     private int hp; 
+    //Nombre de la escena en la que nos encontramos. 
     private string sceneName; 
+    //Puntuación. 
     private int points; 
+    //Parte del nivel en que nos encontramos. Empieza en 0 y sube hasta el boss. 
     private int lvl; 
+    //Vidas actuales del jugador. Empieza en 3 y llega hasta 0. 
     private int lives; 
+    //Caracter que guarda el arma actual: '1' para lanzas, '2' para melee. 
     private char armaActual;
+    //Modificador al daño. 
     private int baseDmg;
     
-    //por orden: ammo max arma 1, ammo max arma 2, hp max
-    private int[] max = {100, 50, 100};
+    
+    //Para debugar los profes: indica si estamos en invulnerable. 
     private bool star;
     
 
@@ -97,7 +109,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-
     //Devuelve las  balas que tiene el arma actual(probs cero usages pero meh)
     public int getClip(int a){
       if(a>1) return -1; 
@@ -120,19 +131,20 @@ public class GameManager : MonoBehaviour
     
     //Recibe damage. Si la vida es menor a cero, pierde. 
     public void takeDamage(int amount){
+        if(star) return; 
         hp = hp - amount;
         if(hp <= 0) lose();   
-
     }
 
-
+    //Gana vida. Viene de cofres. 
     public void gainHealth(int amount){
-        hp = hp + amount; 
-        if(hp>max[2]) hp = max[2]; 
+        hp += amount; 
+        if(hp > max[2]) hp = max[2]; 
     }
 
+    //Recarga el arma actual
     public void reloadGun(){
-int weapon = armaActual - '1'; 
+        int weapon = armaActual - '0'; 
         if(weapon == 1){
             if(clip[0] == 25)return; 
             else{
@@ -179,8 +191,7 @@ int weapon = armaActual - '1';
         else return 40+baseDmg;
     }
 
-    public void addLootChest(string cosa, int amount){//TALVEZ hay que cambiar estos para tener en cuenta los buffs a 
-        Debug.Log("He recibido" + cosa + ", " + amount);
+    public void addLootChest(string cosa, int amount){
         if(cosa == "A1"){
             ammo[0] += amount; 
             if(ammo[0] > max[0]) ammo[0] = max[0]; 
@@ -190,8 +201,7 @@ int weapon = armaActual - '1';
             if(ammo[1] > max[1]) ammo[1] = max[1]; 
         }
         else if(cosa == "HP"){
-            hp += amount; 
-            if(hp > max[2]) hp = max[2]; 
+            gainHealth(amount); 
         }
     }
 
@@ -206,16 +216,17 @@ int weapon = armaActual - '1';
         else if(cosa =="LANZA"){
             ammo[0] += 10; 
             max[0] += 10; 
-        }
-        else{
             ammo[1] += 3; 
             max[1] += 3; 
+        }
+        else{
+            lives++; 
         }
     }
 
     public void lose(){
         if(lives == 0){
-            //loadScene(GameOver); 
+            loadScene(GameOver); 
         }
         else{
             //añadir alguna animacion tal vez
