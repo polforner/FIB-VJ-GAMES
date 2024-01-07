@@ -7,13 +7,17 @@ public class FollowPlayer : MonoBehaviour
     public GameObject player;
 
     Vector3 startDirection;
+    float playerStartY;
+    float cameraStartY;
 
     // Start is called before the first frame update
     void Start()
     {
         // Store starting direction of the player with respect to the axis of the level
         startDirection = player.transform.position - player.transform.parent.position;
-        startDirection.y = 0.0f;
+       startDirection.y = 0.0f;
+       playerStartY = player.transform.position.y;
+       cameraStartY = transform.parent.position.y;
         startDirection.Normalize();
     }
 
@@ -33,5 +37,12 @@ public class FollowPlayer : MonoBehaviour
         else
             orientation = Quaternion.FromToRotation(startDirection, currentDirection);
         transform.parent.rotation = orientation;
+
+        // Compute the position of the camera pivot
+        
+        Vector3 position = transform.parent.position;
+        position.y = cameraStartY + (player.transform.position.y - playerStartY);
+        transform.parent.position = position;
+        
     }
 }
