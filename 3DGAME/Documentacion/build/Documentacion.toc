@@ -1,0 +1,17 @@
+\contentsline {section}{\numberline {1}El juego original: Orbital Bullet}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Desarollo}{2}{subsection.1.1}%
+\contentsline {subsection}{\numberline {1.2}Ventas}{2}{subsection.1.2}%
+\contentsline {subsection}{\numberline {1.3}Enlaces de interes}{3}{subsection.1.3}%
+\contentsline {section}{\numberline {2}Nuestro proyecto: Dungeon Escape}{3}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Instrucciones}{3}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Caracteristicas implementadas}{4}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Entidades del juego}{4}{subsection.2.3}%
+\contentsline {subsubsection}{\numberline {2.3.1}Jugador}{5}{subsubsection.2.3.1}%
+\contentsline {subsubsection}{\numberline {2.3.2}Pinchos}{5}{subsubsection.2.3.2}%
+\contentsline {subsubsection}{\numberline {2.3.3}Enemigo de largo alcance: El Mago}{6}{subsubsection.2.3.3}%
+\contentsline {subsubsection}{\numberline {2.3.4}Enemigo de corto alcance: El Barbaro}{6}{subsubsection.2.3.4}%
+\contentsline {subsubsection}{\numberline {2.3.5}Jefe final: El Caballero}{7}{subsubsection.2.3.5}%
+\contentsline {subsubsection}{\numberline {2.3.6}Cofre}{7}{subsubsection.2.3.6}%
+\contentsline {section}{\numberline {3}Metodología}{8}{section.3}%
+\contentsline {section}{\numberline {4}Conclusiones}{9}{section.4}%
+\contentsline {section}{\numberline {5}Bibliografía}{9}{section.5}%

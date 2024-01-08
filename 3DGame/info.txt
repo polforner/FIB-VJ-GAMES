@@ -1,12 +1,3 @@
-Ignacio Folgueiras Bosque 
-Pol Forner Gómez
---------------------ESTO HAY Q BORRARLO
-Version de unity: x.X.X
-
-Webs de interes
-  -12 rules for animation disney (the illusion of life)
-  Toms planner diagrama de gantt (la memoria la puedo hacer yo entera, es lo q hacemos en software)
-  Pensar y decidir un estilo -> magicavoxel, mixamo (FBX for unity)
-https://www.cs.upc.edu/~jalonso/vj/
-Plataforma en la cual cambiar de scene -> cada scene es un "nivel" distinto para evitar sobrecarga, cada scene que tenga 1 o 2 niveles de altura
-implementar talent tree? 
+Ignacio Folgueiras Bosque
+Pol Forner Gomez 
+ 

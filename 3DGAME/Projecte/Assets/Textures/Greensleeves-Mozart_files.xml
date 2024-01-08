@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<files>
+  <file name="Greensleeves-Mozart_archive.torrent" source="metadata">
+    <btih>86abdb4a7dd48aa8a33917e187817584bc17e226</btih>
+    <mtime>1613374007</mtime>
+    <size>2526</size>
+    <md5>cadc33c7d54d85fb5a5694bebd54e708</md5>
+    <crc32>6c3d0fe7</crc32>
+    <sha1>2a3ec459e89b3fdb488a13180575be96d0fc72e1</sha1>
+    <format>Archive BitTorrent</format>
+  </file>
+  <file name="Greensleeves-Mozart_files.xml" source="original">
+    <format>Metadata</format>
+    <md5>495d2aa4da4d8d5da4b4cfd8dbeffbf9</md5>
+  </file>
+  <file name="Greensleeves-Mozart_meta.xml" source="original">
+    <format>Metadata</format>
+    <mtime>1613374006</mtime>
+    <size>675</size>
+    <md5>6c15b006bd9a44c9c578a70185328a27</md5>
+    <crc32>476cb8a8</crc32>
+    <sha1>d3f0b1bada116aebcf49da6f8afc39c373defa9b</sha1>
+  </file>
+  <file name="Greensleeves-Mozart_vbr.m3u" source="derivative">
+    <format>VBR M3U</format>
+    <original>MozartSeason-Greensleeves.mp3</original>
+    <md5>7135901241c9c7a0daecfd44cc897c82</md5>
+    <mtime>1240034222</mtime>
+    <size>82</size>
+    <crc32>f0d8ed84</crc32>
+    <sha1>83c5549958b62acd557ec02d0315798867d16fdf</sha1>
+  </file>
+  <file name="Greensleeves-Mozart_vbr_mp3.zip" source="derivative">
+    <format>VBR ZIP</format>
+    <original>MozartSeason-Greensleeves.mp3</original>
+    <md5>39deb06d5ead555a7729fe91ea3c05fd</md5>
+    <mtime>1240034193</mtime>
+    <size>4553046</size>
+    <crc32>56c8645b</crc32>
+    <sha1>f402c521e7376156ec338e83535cd0815b60243a</sha1>
+    <length>284.57</length>
+    <height>0</height>
+    <width>0</width>
+  </file>
+  <file name="MozartSeason-Greensleeves.mp3" source="original">
+    <title>Mozart Season - Greensleeves</title>
+    <format>VBR MP3</format>
+    <md5>54fea1d249a2c23411b3635579f73b34</md5>
+    <mtime>1240034099</mtime>
+    <size>4552856</size>
+    <crc32>ce982155</crc32>
+    <sha1>7cdb6d9d36375784d7ff44e9322886d7691f741b</sha1>
+    <length>284.55</length>
+    <height>0</height>
+    <width>0</width>
+    <genre>Classical</genre>
+    <artist>Mozart</artist>
+    <external-identifier>urn:acoustid:5f481165-fd23-41fc-9470-15630b3b1733</external-identifier>
+    <external-identifier>urn:mb_recording_id:fc0386a9-9a1b-430e-936d-aa26b7131664</external-identifier>
+  </file>
+  <file name="MozartSeason-Greensleeves.ogg" source="derivative">
+    <format>Ogg Vorbis</format>
+    <original>MozartSeason-Greensleeves.mp3</original>
+    <md5>b26f79cca7d51b84b141f7e72b5555b5</md5>
+    <mtime>1240034170</mtime>
+    <size>3357269</size>
+    <crc32>84e870c9</crc32>
+    <sha1>cf4443b49b2905ec3ea5cef3a0e0aa82f0552b86</sha1>
+    <length>280.11</length>
+    <height>0</height>
+    <width>0</width>
+  </file>
+  <file name="MozartSeason-Greensleeves.png" source="derivative">
+    <format>PNG</format>
+    <original>MozartSeason-Greensleeves.mp3</original>
+    <mtime>1414879711</mtime>
+    <size>10836</size>
+    <md5>01dd20a1c8923828980058877250f5f1</md5>
+    <crc32>f8ffbc08</crc32>
+    <sha1>445f633546e4da3ee3ef32e987efbcb8db714735</sha1>
+  </file>
+  <file name="__ia_thumb.jpg" source="original">
+    <mtime>1613374006</mtime>
+    <size>3101</size>
+    <md5>0cdeff01102aa0fd9d28a3433373c91c</md5>
+    <crc32>81653e3e</crc32>
+    <sha1>29fa0f09742b813ae0120bdaac3ef02a033bbb86</sha1>
+    <format>Item Tile</format>
+    <rotation>0</rotation>
+  </file>
+</files>
